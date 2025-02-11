@@ -10,25 +10,57 @@ namespace db_project
 {
     internal class DatabaseSingleton
     {
-        private static SqlConnection? conn = null;
+          private static SqlConnection? _connInstance = null;
+          private static readonly object _lock = new object();  
 
 
-        public static SqlConnection GetConnInstance()
-        {
-            if(conn == null)
+          private DatabaseSingleton() {} 
+
+          public static SqlConnection GetConnInstance()
+          {
+            lock (_lock) 
             {
-                SqlConnectionStringBuilder consStringBuilder = new SqlConnectionStringBuilder();
-                consStringBuilder.UserID = ConfigurationManager.AppSettings["UserID"]; 
-                consStringBuilder.Password = ConfigurationManager.AppSettings["Password"];
-                consStringBuilder.InitialCatalog = ConfigurationManager.AppSettings["InitialCatalog"];
-                conn = new SqlConnection(consStringBuilder.ConnectionString);
-                conn.Open();
-                Console.WriteLine("Connected");
-                
+                if (_connInstance == null)
+                {
+                    SqlConnectionStringBuilder consStringBuilder = new SqlConnectionStringBuilder();
+                    consStringBuilder.UserID = ConfSetting("UserID");
+                    consStringBuilder.Password = ConfSetting("Password");
+                    consStringBuilder.InitialCatalog = ConfSetting("InitialCatalog");
+                    consStringBuilder.DataSource = ConfSetting("DataSource");
+                    consStringBuilder.TrustServerCertificate = true;
+                    consStringBuilder.ConnectTimeout = 30;
+                    _connInstance = new SqlConnection(consStringBuilder.ConnectionString);
+                    _connInstance.Open();
+                    Console.WriteLine("Connected >:3");
+
+
+                }
+
+                return _connInstance;
 
             }
-            return conn;
-        }
+
+             
+          }
+
+          public static void CloseConn()
+          {
+              if(_connInstance != null)
+              {
+                  _connInstance.Close();
+                  _connInstance.Dispose();
+              }
+          }
+
+
+          public static string ConfSetting(string key)
+          {
+              var appSettings = ConfigurationManager.AppSettings;
+              string res = appSettings[key] ?? "Value not found";
+              return res;
+          }
+
+      
 
     }
 }
