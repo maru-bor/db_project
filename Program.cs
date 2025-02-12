@@ -7,31 +7,22 @@ namespace db_project
     {
         static void Main(string[] args)
         {
-             SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            Zanry z = new Zanry("komedie", 555);
+
+            string query = $"insert into žánry (nazev, kod) values ('{z.Nazev}', {z.Kod})";
+            SqlCommand command = new SqlCommand(query, conn);
+            /*  command.ExecuteNonQuery();*/
+
+
            
 
-            /*   SqlConnectionStringBuilder consStringBuilder = new SqlConnectionStringBuilder();
-               consStringBuilder.UserID = ConfigurationManager.AppSettings["UserID"];
-               consStringBuilder.Password = ConfigurationManager.AppSettings["Password"];
-               consStringBuilder.InitialCatalog = ConfigurationManager.AppSettings["InitialCatalog"];
-               consStringBuilder.DataSource = ConfigurationManager.AppSettings["DataSource"];
-               consStringBuilder.TrustServerCertificate = true;
-               consStringBuilder.ConnectTimeout = 30;
-               try
-               {
-                   using (SqlConnection conn = new SqlConnection(consStringBuilder.ConnectionString))
-                   {
-                       conn.Open();
-                       Console.WriteLine("Connected YAY");
-                   }
-               }
-               catch (Exception ex) 
-               { 
-                   Console.WriteLine(ex.Message);
-               }
 
 
-           }*/
+
+
+
+
         }
     }
 }
