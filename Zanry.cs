@@ -18,9 +18,9 @@ namespace db_project
             get => nazev;
             set 
             {
-                if (value.Length < 3 || value.Length > 100)
+                if (value == null || value.Length < 3 || value.Length > 100)
                 {
-                    throw new Exception("nevalidni delka nazvu: musi mit vice jak 3 znaky a mene nebo rovno 100 znaku");
+                    throw new Exception("nevalidni delka nazvu");
                 }
                 else 
                 {
@@ -34,9 +34,9 @@ namespace db_project
             get => kod;
             set 
             {
-                if (value <= 0)
+                if (value == null || value <= 0)
                 {
-                    throw new Exception("nevalidni hodnota kodu: musi byt vetsi nez 0");
+                    throw new Exception("nevalidni hodnota kodu");
                 }
                 else 
                 { 
@@ -48,8 +48,15 @@ namespace db_project
 
         public Zanry(string nazev, int kod)
         {
-            this.nazev = nazev;
-            this.kod = kod;
+            Nazev = nazev;
+            Kod = kod;
+        }
+
+        public Zanry(){}
+
+        public override string? ToString()
+        {
+            return $"{nazev}, kód: {kod}";
         }
     }
 }

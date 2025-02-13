@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace db_project
 {
-    internal interface DAOInterface<T>
+    public interface DAOInterface<T> 
     {
-        T GetByValueName(string name);
+        T GetByValueName(params string[] names);
         IEnumerable<T> GetAll();
         void Save(T element);
         void Update(T element);
