@@ -11,7 +11,7 @@ namespace db_project
         T GetByValueName(params string[] names);
         IEnumerable<T> GetAll();
         void Save(T element);
-        void Update(T element);
+        void Update(T previousElement, T updatedElement);
         void Delete(T element);
     }
 }

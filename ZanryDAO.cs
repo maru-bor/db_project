@@ -13,22 +13,24 @@ namespace db_project
         public void Delete(Zanry element)
         {
             
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+           
 
             string query = $"delete from žánry where nazev = '{element.Nazev}'";
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
             {
+                SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.ExecuteNonQuery();
             }
         }
 
         public IEnumerable<Zanry> GetAll()
         {
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            
 
             string query = $"select * from žánry;";
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
             {
+                SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read()) 
                 {
@@ -44,12 +46,13 @@ namespace db_project
     
         public Zanry GetByValueName(params string[] names)
         {
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            
 
             Zanry z = null;
             string query = $"select * from žánry where nazev = '{names[0]}'";
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
             {
+                SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
@@ -69,12 +72,24 @@ namespace db_project
 
         public void Save(Zanry element)
         {
-            throw new NotImplementedException();
+            
+            string query = $"insert into žánry(nazev, kod) values ('{element.Nazev}', {element.Kod});";
+            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+            }
         }
 
-        public void Update(Zanry element)
+        public void Update(Zanry previousElement, Zanry updatedElement)
         {
-            throw new NotImplementedException();
+           
+            string query = $"update žánry set nazev='{updatedElement.Nazev}', kod={updatedElement.Kod} where nazev={previousElement.Nazev}";
+            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            {
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }
