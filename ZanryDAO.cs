@@ -29,8 +29,7 @@ namespace db_project
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read()) 
                 {
-                    Zanry zanr = new Zanry(reader[1].ToString(), Convert.ToInt32(reader[2]));
-                    zanr.Id_za = Convert.ToInt32(reader[0]);
+                    Zanry zanr = new Zanry(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToInt32(reader[2]));
                     yield return zanr;
                     
                 }
@@ -38,11 +37,11 @@ namespace db_project
             }
         }
 
-    
+
         public Zanry GetByValueName(params string[] names)
         {
             
-            Zanry z = null;
+            Zanry? z = null;
             string query = $"select * from žánry where nazev = '{names[0]}'";
             using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
             {

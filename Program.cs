@@ -7,7 +7,8 @@ namespace db_project
     {
         static void Main(string[] args)
         {
-            
+            FilmyDAO dao = new FilmyDAO();  
+            Console.WriteLine(string.Join("\n", dao.GetAll()));
         }
     }
 }

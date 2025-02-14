@@ -82,6 +82,14 @@ namespace db_project
             }
         }
 
+        public Filmy(int id, string nazev, DateTime datVzniku, bool jeStalePromitanVKinech)
+        {
+            Id = id;
+            Nazev = nazev;
+            DatVzniku = datVzniku;
+            JeStalePromitanVKinech = jeStalePromitanVKinech;
+        }
+
         public Filmy(string nazev, DateTime dat_vzniku, bool jeStalePromitanVKinech, Reziseri reziser, Zanry zanr)
         {
             Nazev = nazev;
@@ -93,7 +101,7 @@ namespace db_project
 
         public override string? ToString()
         {
-            return base.ToString();
+            return $"název filmu: {nazev} , {datVzniku}, stále promítán v kinech: {jeStalePromitanVKinech}";
         }
     }
 }

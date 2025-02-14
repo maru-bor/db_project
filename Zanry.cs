@@ -52,6 +52,13 @@ namespace db_project
             Kod = kod;
         }
 
+        public Zanry(int id_za, string nazev, int kod)
+        {
+            Id_za = id_za;
+            Nazev = nazev;
+            Kod = kod;
+        }
+
         public Zanry(){}
 
         public override string? ToString()

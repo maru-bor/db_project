@@ -70,7 +70,17 @@ namespace db_project
             
         }
 
-        public Reziseri(){}
+        public Reziseri(int id_rez, string? jmeno, string? prijmeni, DateTime datNarozeni)
+        {
+            Id_rez = id_rez;
+            Jmeno = jmeno;
+            Prijmeni = prijmeni;
+            DatNarozeni = datNarozeni;
+        }
+
+        public Reziseri()
+        {
+        }
 
         public override string? ToString()
         {
