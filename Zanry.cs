@@ -45,18 +45,21 @@ namespace db_project
                
             }
         }
-
+        public Zanry(int id_za, string nazev, int kod)
+        {
+            Id_za = id_za;
+            Nazev = nazev;
+            Kod = kod;
+        }
         public Zanry(string nazev, int kod)
         {
             Nazev = nazev;
             Kod = kod;
         }
 
-        public Zanry(int id_za, string nazev, int kod)
+        public Zanry(string nazev)
         {
-            Id_za = id_za;
             Nazev = nazev;
-            Kod = kod;
         }
 
         public Zanry(){}

@@ -70,6 +70,12 @@ namespace db_project
             
         }
 
+        public Reziseri(string? jmeno, string? prijmeni)
+        {
+            Jmeno = jmeno;
+            Prijmeni = prijmeni;
+        }
+
         public Reziseri(int id_rez, string? jmeno, string? prijmeni, DateTime datNarozeni)
         {
             Id_rez = id_rez;

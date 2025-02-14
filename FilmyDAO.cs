@@ -22,16 +22,20 @@ namespace db_project
 
         public IEnumerable<Filmy> GetAll()
         {
-            string query = $"select * from filmy;";
+            string query = $"select f.nazev, f.dat_vzniku, f.je_stale_promitan, z.nazev, r.jmeno, r.prijmeni from filmy f " +
+                $"join žánry z on f.id_za = z.id_za " +
+                $"join režiséři r on f.id_rez = r.id_rez;";
             using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
             {
                 SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataReader reader = cmd.ExecuteReader();
                 while (reader.Read())
                 {
-                   
-                    Filmy film = new Filmy(Convert.ToInt32(reader[0]), reader[1].ToString(), 
-                        Convert.ToDateTime(reader[2]), Convert.ToBoolean(reader[3]));
+
+                    Reziseri reziser = new Reziseri(reader[4].ToString(), reader[5].ToString());
+                    Zanry zanr = new Zanry(reader[3].ToString());
+                    Filmy film = new Filmy(reader[0].ToString(),
+                        Convert.ToDateTime(reader[1]), Convert.ToBoolean(reader[2]), reziser, zanr);
                     yield return film;
 
                 }
@@ -41,8 +45,13 @@ namespace db_project
 
         public Filmy GetByValueName(params string[] names)
         {
-            Filmy? f = null;
-            string query = $"select * from filmy where nazev='{names[0]}';";
+            Filmy f = null;
+            Reziseri r = null;
+            Zanry z = null;
+            string query = $"select f.nazev, f.dat_vzniku, f.je_stale_promitan, z.nazev, r.jmeno, r.prijmeni from filmy f " +
+                $"join žánry z on f.id_za = z.id_za " +
+                $"join režiséři r on f.id_rez = r.id_rez " +
+                $"where f.nazev = '{names[0]}';";
             using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
             {
                 SqlCommand cmd = new SqlCommand(query, conn);
@@ -50,8 +59,10 @@ namespace db_project
                 while (reader.Read())
                 {
 
-                    f = new Filmy(Convert.ToInt32(reader[0]), reader[1].ToString(),
-                        Convert.ToDateTime(reader[2]), Convert.ToBoolean(reader[3]));
+                    r = new Reziseri(reader[4].ToString(), reader[5].ToString());
+                    z = new Zanry(reader[3].ToString());    
+                    f = new Filmy(reader[0].ToString(), 
+                        Convert.ToDateTime(reader[1]), Convert.ToBoolean(reader[2]), r, z);
                     
 
                 }
