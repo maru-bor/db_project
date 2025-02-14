@@ -12,7 +12,7 @@ namespace db_project
         private int id_pred;
         private DateTime datPlanovanehoPredstaveni;
         private DateTime datKonanehoPredstaveni;
-        private float delkaPredstaveni;
+        private double delkaPredstaveni;
         private Kinosaly kinosal;
         private Filmy film;
 
@@ -49,7 +49,7 @@ namespace db_project
 
             }
         }
-        public float DelkaPredstaveni 
+        public double DelkaPredstaveni 
         { 
             get => delkaPredstaveni;
             set 
@@ -98,7 +98,7 @@ namespace db_project
             }
         }
 
-        public Predstaveni(DateTime datPlanovanehoPredstaveni, DateTime datKonanehoPredstaveni, float delkaPredstaveni, Kinosaly kinosal, Filmy film)
+        public Predstaveni(DateTime datPlanovanehoPredstaveni, DateTime datKonanehoPredstaveni, double delkaPredstaveni, Kinosaly kinosal, Filmy film)
         {
             DatPlanovanehoPredstaveni = datPlanovanehoPredstaveni;
             DatKonanehoPredstaveni = datKonanehoPredstaveni;
@@ -111,7 +111,7 @@ namespace db_project
 
         public override string? ToString()
         {
-            return base.ToString();
+            return $"dat. konaného představení - {datKonanehoPredstaveni}, délka před.: {delkaPredstaveni} h, kinosál: {Kinosal.Nazev}, promít. film: {Film.Nazev}";
         }
     }
 }

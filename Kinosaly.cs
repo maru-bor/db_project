@@ -51,6 +51,11 @@ namespace db_project
             CisloSalu = cisloSalu;
         }
 
+        public Kinosaly(string nazev)
+        {
+            Nazev = nazev;
+        }
+
         public Kinosaly() {}
 
         public override string? ToString()

@@ -11,8 +11,7 @@ namespace db_project
     {
         public void Delete(Filmy element)
         {
-            string query = $"delete from filmy where nazev = '{element.Nazev}' and dat_vznik='{element.DatVzniku}' and id_rez={GetDirectorID(element.Reziser)} " +
-                $"and id_rez={GetDirectorID(element.Reziser)}";
+            string query = $"delete from filmy where nazev = '{element.Nazev}' and dat_vznik='{element.DatVzniku}' and id_rez={GetDirectorID(element.Reziser)};";
             using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
             {
                 SqlCommand cmd = new SqlCommand(query, conn);
@@ -22,9 +21,9 @@ namespace db_project
 
         public IEnumerable<Filmy> GetAll()
         {
-            string query = $"select f.nazev, f.dat_vzniku, f.je_stale_promitan, z.nazev, r.jmeno, r.prijmeni from filmy f " +
-                $"join žánry z on f.id_za = z.id_za " +
-                $"join režiséři r on f.id_rez = r.id_rez;";
+            string query = "select f.nazev, f.dat_vzniku, f.je_stale_promitan, z.nazev, r.jmeno, r.prijmeni from filmy f " +
+                "join žánry z on f.id_za = z.id_za " +
+                "join režiséři r on f.id_rez = r.id_rez;";
             using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
             {
                 SqlCommand cmd = new SqlCommand(query, conn);

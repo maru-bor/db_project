@@ -99,6 +99,11 @@ namespace db_project
             Zanr = zanr;
         }
 
+        public Filmy(string nazev)
+        {
+            Nazev = nazev;
+        }
+
         public override string? ToString()
         {
             return $"název filmu: {nazev} , dat. vzniku: {datVzniku}, stále promítán v kinech: {jeStalePromitanVKinech}, žánr: {Zanr.Nazev}, režisér: {Reziser.Jmeno} {Reziser.Prijmeni}";
