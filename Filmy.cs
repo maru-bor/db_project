@@ -21,7 +21,7 @@ namespace db_project
             get => nazev;
             set
             {
-                if (value == null || value.Length < 3 || value.Length > 100)
+                if (value == null || value == "" || value.Length < 3 || value.Length > 100)
                 {
                     throw new Exception("nevalidni delka nazvu");
                 }

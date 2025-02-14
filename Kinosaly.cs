@@ -50,5 +50,12 @@ namespace db_project
             Nazev = nazev;
             CisloSalu = cisloSalu;
         }
+
+        public Kinosaly() {}
+
+        public override string? ToString()
+        {
+            return $"{nazev}, číslo kinosálu: {cisloSalu}";
+        }
     }
 }

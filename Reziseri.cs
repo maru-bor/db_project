@@ -15,7 +15,7 @@ namespace db_project
         private DateTime datNarozeni;
 
         public int Id_rez { get => id_rez; set => id_rez = value; }
-        public string Jmeno 
+        public string? Jmeno 
         { 
             get => jmeno;
             set 
@@ -30,7 +30,7 @@ namespace db_project
                 }
             } 
         }
-        public string Prijmeni 
+        public string? Prijmeni 
         { 
             get => prijmeni;
             set
@@ -69,6 +69,8 @@ namespace db_project
             DatNarozeni = datNarozeni;
             
         }
+
+        public Reziseri(){}
 
         public override string? ToString()
         {

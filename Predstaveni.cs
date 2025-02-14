@@ -54,7 +54,7 @@ namespace db_project
             get => delkaPredstaveni;
             set 
             {
-                if(value < 0)
+                if(value <= 0)
                 {
                     throw new Exception("nevalidni delka predstaveni");
 
@@ -106,6 +106,8 @@ namespace db_project
             Kinosal = kinosal;
             Film = film;
         }
+
+        public Predstaveni(){ }
 
         public override string? ToString()
         {
