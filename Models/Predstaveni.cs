@@ -111,7 +111,7 @@ namespace db_project
 
         public override string? ToString()
         {
-            return $"dat. konaného představení - {datKonanehoPredstaveni}, délka před.: {delkaPredstaveni} h, kinosál: {Kinosal.Nazev}, promít. film: {Film.Nazev}";
+            return $"dat. plán. představení - {datPlanovanehoPredstaveni},  dat. konaného představení - {datKonanehoPredstaveni}, délka před.: {delkaPredstaveni} h, kinosál: {Kinosal.Nazev}, promít. film: {Film.Nazev}";
         }
     }
 }
