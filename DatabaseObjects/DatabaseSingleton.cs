@@ -20,7 +20,7 @@ namespace db_project
           {
             lock (_lock) 
             {
-                if (_connInstance == null)
+                if (_connInstance == null || _connInstance.State == System.Data.ConnectionState.Closed)
                 {
                     SqlConnectionStringBuilder consStringBuilder = new SqlConnectionStringBuilder();
                     consStringBuilder.UserID = ConfSetting("UserID");

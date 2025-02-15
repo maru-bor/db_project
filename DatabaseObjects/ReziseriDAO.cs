@@ -11,29 +11,36 @@ namespace db_project
     {
         public void Delete(Reziseri element)
         {
-            string query = $"delete from režiséři where jmeno = '{element.Jmeno}' and prijmeni='{element.Prijmeni}'";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "delete from režiséři where jmeno = @jmeno and prijmeni = @prijmeni and dat_nar = @dat_nar";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@jmeno", element.Jmeno);
+                cmd.Parameters.AddWithValue("@prijmeni", element.Prijmeni);
+                cmd.Parameters.AddWithValue("@dat_nar", element.DatNarozeni);
+
                 cmd.ExecuteNonQuery();
             }
         }
 
         public IEnumerable<Reziseri> GetAll()
         {
-            string query = $"select * from režiséři;";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
-            {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    Reziseri reziser = new Reziseri(reader[1].ToString(), reader[2].ToString(), Convert.ToDateTime(reader[3]));
-                    reziser.Id_rez = Convert.ToInt32(reader[0]);
-                    yield return reziser;
+            string query = "select * from režiséři;";
 
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Reziseri reziser = new Reziseri(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), Convert.ToDateTime(reader[3]));
+
+                        yield return reziser;
+
+                    }
                 }
-                reader.Close();
+                
             }
         }
 

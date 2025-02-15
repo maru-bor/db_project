@@ -45,6 +45,13 @@ namespace db_project
             } 
         }
 
+        public Kinosaly(int id_kis, string nazev, int cisloSalu)
+        {
+            Id_kis = id_kis;
+            Nazev = nazev;
+            CisloSalu = cisloSalu;
+        }
+
         public Kinosaly(string nazev, int cisloSalu)
         {
             Nazev = nazev;

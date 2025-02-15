@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace db_project
 {
@@ -11,69 +12,92 @@ namespace db_project
     {
         public void Delete(Kinosaly element)
         {
-            string query = $"delete from kinosály where nazev = '{element.Nazev}' and cis_sal = '{element.CisloSalu}'";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "delete from kinosály where nazev = @nazev and cis_sal = @cis_sal;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nazev", element.Nazev);
+                cmd.Parameters.AddWithValue("@cis_sal", element.CisloSalu);
+
                 cmd.ExecuteNonQuery();
             }
         }
 
         public IEnumerable<Kinosaly> GetAll()
         {
-            string query = $"select * from kinosály;";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "select * from kinosály;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
-                    Kinosaly kinosal = new Kinosaly(reader[1].ToString(), Convert.ToInt32(reader[2]));
-                    kinosal.Id_kis = Convert.ToInt32(reader[0]);
-                    yield return kinosal;
+                    while (reader.Read())
+                    {
+                        Kinosaly kinosal = new Kinosaly(Convert.ToInt32(reader["id_kis"]), reader["nazev"].ToString(), Convert.ToInt32(reader["cis_sal"]));
+                        yield return kinosal;
 
+                    }
                 }
-                reader.Close();
+                
             }
         }
 
         public Kinosaly GetByValueName(params string[] names)
         {
-            Kinosaly? k = null;
-            string query = $"select * from kinosály where nazev = '{names[0]}'";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            if (names == null || names.Length == 0)
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    k = new Kinosaly(reader[1].ToString(), Convert.ToInt32(reader[2]));
-                    k.Id_kis = Convert.ToInt32(reader[0]);
-
-
-                }
-                reader.Close();
-                return k;
+                throw new Exception("alespon jedno jmeno musi byt poskytnuto");
             }
+
+            Kinosaly? k = null;
+            string query = "select * from kinosály where nazev = @nazev)";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@nazev", names[0]);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        k = new Kinosaly(Convert.ToInt32(reader["id_kis"]), reader["nazev"].ToString(), Convert.ToInt32(reader["cis_sal"]));
+                        
+                    }
+
+                   
+                }
+                    
+               
+            }
+            return k;
         }
 
         public void Save(Kinosaly element)
         {
-            string query = $"insert into kinosály(nazev, cis_sal) values ('{element.Nazev}', {element.CisloSalu});";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "insert into kinosály(nazev, cis_sal) values (@nazev, @cis_sal);";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nazev", element.Nazev);
+                cmd.Parameters.AddWithValue("@cis_sal", element.CisloSalu);
+
                 cmd.ExecuteNonQuery();
             }
         }
 
         public void Update(Kinosaly previousElement, Kinosaly updatedElement)
         {
-            string query = $"update kinosály set nazev='{updatedElement.Nazev}', cis_sal={updatedElement.CisloSalu} " +
-                $"where nazev='{previousElement.Nazev} and cis_sal={previousElement.CisloSalu}';";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "update kinosály set nazev = @nazev, cis_sal = @cis_sal" +
+                           "where nazev = @prev_nazev and cis_sal = @prev_cis_sal;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nazev", updatedElement.Nazev);
+                cmd.Parameters.AddWithValue("@cis_sal", updatedElement.CisloSalu);
+
+                cmd.Parameters.AddWithValue("@prev_nazev", previousElement.Nazev);
+                cmd.Parameters.AddWithValue("@prev_cis_sal", previousElement.CisloSalu);
+
                 cmd.ExecuteNonQuery();
             }
         }

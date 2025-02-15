@@ -12,53 +12,84 @@ namespace db_project
     {
         public void Delete(Zanry element)
         {
-            string query = $"delete from žánry where nazev = '{element.Nazev}'";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = $"delete from žánry where nazev = @nazev";
+
+
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            
+               
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nazev", element.Nazev);
                 cmd.ExecuteNonQuery();
             }
+                    
+                
+            
         }
 
         public IEnumerable<Zanry> GetAll()
         {
             string query = $"select * from žánry;";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            
+                
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read()) 
-                {
-                    Zanry zanr = new Zanry(Convert.ToInt32(reader[0]), reader[1].ToString(), Convert.ToInt32(reader[2]));
-                    yield return zanr;
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        
+                         while (reader.Read())
+                         {
+                            Zanry zanr = new Zanry(Convert.ToInt32(reader["id_za"]), reader["nazev"].ToString(), Convert.ToInt32(reader["kod"]));
+                            yield return zanr;
+
+                         }
+                        
+                    }
                     
-                }
-                reader.Close();
+                    
             }
+               
+               
+            
         }
 
 
         public Zanry GetByValueName(params string[] names)
         {
-            
-            Zanry? z = null;
-            string query = $"select * from žánry where nazev = '{names[0]}'";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            if (names == null || names.Length == 0)
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                      z = new Zanry();
-                      z.Id_za = Convert.ToInt32(reader[0]);
-                      z.Nazev = reader[1].ToString();
-                      z.Kod = Convert.ToInt32(reader[2]);
-                    
-
-                }
-                reader.Close();
-                return z;
+                throw new Exception("alespon jedno jmeno musi byt poskytnuto");
             }
+
+            Zanry? z = null;
+            string query = "select * from žánry where nazev = @nazev";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            
+                
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+
+                    cmd.Parameters.AddWithValue("@nazev", names[0]);
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            z = new Zanry(Convert.ToInt32(reader["id_za"]), reader["nazev"].ToString(), Convert.ToInt32("kod"));
+
+
+                        }
+                       
+                    }
+                }
+                return z;
+
+
+            
 
 
         }
@@ -66,21 +97,29 @@ namespace db_project
         public void Save(Zanry element)
         {
             
-            string query = $"insert into žánry(nazev, kod) values ('{element.Nazev}', {element.Kod});";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "insert into žánry(nazev, kod) values (@nazev , @kod);";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nazev", element.Nazev);
+                cmd.Parameters.AddWithValue("@kod", element.Kod);
                 cmd.ExecuteNonQuery();
             }
+
         }
 
         public void Update(Zanry previousElement, Zanry updatedElement)
         {
            
-            string query = $"update žánry set nazev='{updatedElement.Nazev}', kod={updatedElement.Kod} where nazev='{previousElement.Nazev}'";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = $"update žánry set nazev = @nazev, kod = @kod where nazev = @prevNazev and kod = @prevKod;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@nazev", updatedElement.Nazev);
+                cmd.Parameters.AddWithValue("@kod", updatedElement.Kod);
+                cmd.Parameters.AddWithValue("@prevNazev", previousElement.Nazev);
+                cmd.Parameters.AddWithValue("@prevKod", previousElement.Kod);
                 cmd.ExecuteNonQuery();
             }
         }
