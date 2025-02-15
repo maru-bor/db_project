@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace db_project
 {
-    internal interface CSVFileInterface
+    internal interface JSONFileInterface
     {
-        void ImportFromCSVFileToDataTable(string filePath);
+        void ImportFromJSONFileToDataTable(string filePath);
     }
 }
