@@ -79,7 +79,7 @@ namespace db_project
                     {
                         while (reader.Read())
                         {
-                            z = new Zanry(Convert.ToInt32(reader["id_za"]), reader["nazev"].ToString(), Convert.ToInt32("kod"));
+                            z = new Zanry(Convert.ToInt32(reader["id_za"]), reader["nazev"].ToString(), Convert.ToInt32(reader["kod"]));
 
 
                         }

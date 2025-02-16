@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace db_project.DatabaseObjects
+namespace db_project
 {
-    class MenuItem
+    internal class KinosalKonzole
     {
-        
 
-        
+
     }
 }

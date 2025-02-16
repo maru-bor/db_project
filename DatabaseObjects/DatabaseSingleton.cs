@@ -31,8 +31,7 @@ namespace db_project
                     consStringBuilder.ConnectTimeout = 30;
                     _connInstance = new SqlConnection(consStringBuilder.ConnectionString);
                     _connInstance.Open();
-                    Console.WriteLine("Connected >:3");
-
+                   
 
                 }
 
