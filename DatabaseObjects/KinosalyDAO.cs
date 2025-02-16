@@ -87,7 +87,7 @@ namespace db_project
 
         public void Update(Kinosaly previousElement, Kinosaly updatedElement)
         {
-            string query = "update kinosály set nazev = @nazev, cis_sal = @cis_sal" +
+            string query = "update kinosály set nazev = @nazev, cis_sal = @cis_sal " +
                            "where nazev = @prev_nazev and cis_sal = @prev_cis_sal;";
             SqlConnection conn = DatabaseSingleton.GetConnInstance();
             using (SqlCommand cmd = new SqlCommand(query, conn))

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace db_project
 {
@@ -34,7 +35,7 @@ namespace db_project
                 {
                     while (reader.Read())
                     {
-                        Reziseri reziser = new Reziseri(Convert.ToInt32(reader[0]), reader[1].ToString(), reader[2].ToString(), Convert.ToDateTime(reader[3]));
+                        Reziseri reziser = new Reziseri(Convert.ToInt32(reader["id_rez"]), reader["jmeno"].ToString(), reader["prijmeni"].ToString(), Convert.ToDateTime(reader["dat_nar"]));
 
                         yield return reziser;
 
@@ -46,40 +47,62 @@ namespace db_project
 
         public Reziseri GetByValueName(params string[] names)
         {
-            Reziseri? rez = null;
-            string query = $"select * from režiséři where jmeno = '{names[0]}' and prijmeni = '{names[1]}';";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            if (names == null || names.Length < 2)
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-                    rez = new Reziseri(reader[1].ToString(), reader[2].ToString(), Convert.ToDateTime(reader[3]));
-                    rez.Id_rez = Convert.ToInt32(reader[0]);
-                   
-                }
-                reader.Close();
-                return rez;
+                throw new Exception("alespon dve jmena musi byt poskytnuta");
             }
+            Reziseri? rez = null;
+            string query = "select * from režiséři where jmeno = @jmeno and prijmeni = @prijmeni;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@jmeno", names[0]);
+                cmd.Parameters.AddWithValue("@prijmeni", names[1]);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        rez = new Reziseri(Convert.ToInt32(reader["id_rez"]), reader["jmeno"].ToString(), reader["prijmeni"].ToString(), Convert.ToDateTime(reader["dat_nar"]));
+                       
+
+                    }
+                    
+                }
+                    
+               
+            }
+            return rez;
         }
 
         public void Save(Reziseri element)
         {
-            string query = $"insert into režiséři(jmeno, prijmeni, dat_nar) values ('{element.Jmeno}', '{element.Prijmeni}', '{element.DatNarozeni.ToString("yyyy-MM-dd")}');";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "insert into režiséři(jmeno, prijmeni, dat_nar) values (@jmeno, @prijmeni, @dat_nar);";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@jmeno", element.Jmeno);
+                cmd.Parameters.AddWithValue("@prijmeni", element.Prijmeni);
+                cmd.Parameters.AddWithValue("@dat_nar", element.DatNarozeni.ToString("yyyy-MM-dd"));
+                
                 cmd.ExecuteNonQuery();
             }
         }
 
         public void Update(Reziseri previousElement, Reziseri updatedElement)
         {
-            string query = $"update režiséři set jmeno='{updatedElement.Jmeno}', prijmeni='{updatedElement.Prijmeni}', dat_nar='{updatedElement.DatNarozeni}' " +
-                $"where jmeno='{previousElement.Jmeno}' and prijmeni='{previousElement.Prijmeni}';";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "update režiséři set jmeno = @jmeno, prijmeni = @prijmeni, dat_nar = @dat_nar " +
+                           "where jmeno = @prev_jmeno and prijmeni = @prev_prijmeni and dat_nar = @prev_dat_nar;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@jmeno", updatedElement.Jmeno);
+                cmd.Parameters.AddWithValue("@prijmeni", updatedElement.Prijmeni);
+                cmd.Parameters.AddWithValue("@dat_nar", updatedElement.DatNarozeni.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+
+                cmd.Parameters.AddWithValue("@prev_jmeno", previousElement.Jmeno);
+                cmd.Parameters.AddWithValue("@prev_prijmeni", previousElement.Prijmeni);
+                cmd.Parameters.AddWithValue("@prev_dat_nar", previousElement.DatNarozeni.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+
                 cmd.ExecuteNonQuery();
             }
         }

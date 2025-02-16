@@ -13,73 +13,94 @@ namespace db_project
         public void Delete(Predstaveni element)
         {
             string query = "delete p from představení p " +
-                "join kinosály k on p.id_kis = k.id_kis" +
-                "join filmy f on p.id_fi = f.id_fi" +
-                $"where p.dat_kon_pred='{element.DatKonanehoPredstaveni}' and k.nazev='{element.Kinosal.Nazev}' and f.nazev='{element.Film.Nazev}';";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+                           "join kinosály k on p.id_kis = k.id_kis" +
+                           "join filmy f on p.id_fi = f.id_fi" +
+                           "where p.dat_kon_pred = @dat_kon_pred and k.nazev = @nazev_ki and f.nazev = @nazev_fi;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@dat_kon_pred", element.DatKonanehoPredstaveni);
+                cmd.Parameters.AddWithValue("@nazev_ki", element.Kinosal.Nazev);
+                cmd.Parameters.AddWithValue("@nazev_fi", element.Film.Nazev);
+
                 cmd.ExecuteNonQuery();
             }
         }
 
         public IEnumerable<Predstaveni> GetAll()
         {
-            string query = "select p.dat_plan_pred, p.dat_kon_pred, p.delka, k.nazev, f.nazev from představení p " +
-                "join kinosály k on p.id_kis = k.id_kis " +
-                "join filmy f on p.id_fi = f.id_fi;";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "select p.dat_plan_pred, p.dat_kon_pred, p.delka, k.nazev as nazev_ki, f.nazev as nazev_fi from představení p " +
+                           "join kinosály k on p.id_kis = k.id_kis " +
+                           "join filmy f on p.id_fi = f.id_fi;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
+                    while (reader.Read())
+                    {
 
-                    Kinosaly kinosal = new Kinosaly(reader[3].ToString());
-                    Filmy film = new Filmy(reader[4].ToString());
-                    Predstaveni predstaveni = new Predstaveni(Convert.ToDateTime(reader[0]), Convert.ToDateTime(reader[1]), Convert.ToDouble(reader[2]), kinosal, film);
-                    yield return predstaveni;
+                        Kinosaly kinosal = new Kinosaly(reader["nazev_ki"].ToString());
+                        Filmy film = new Filmy(reader["nazev_fi"].ToString());
+                        Predstaveni predstaveni = new Predstaveni(Convert.ToDateTime(reader["dat_plan_pred"]), Convert.ToDateTime(reader["dat_kon_pred"]), 
+                                                  Convert.ToDouble(reader["delka"]), kinosal, film);
+                        yield return predstaveni;
 
+                    }
                 }
-                reader.Close();
+                    
+               
+            
             }
         }
 
         public Predstaveni GetByValueName(params string[] names)
         {
-            Predstaveni predstaveni = null;
-            Filmy filmy = null;
-            Kinosaly kinosal = null;
-            string query = "select p.dat_plan_pred, p.dat_kon_pred, p.delka, k.nazev, f.nazev from představení p " +
-               "join kinosály k on p.id_kis = k.id_kis " +
-               "join filmy f on p.id_fi = f.id_fi " +
-               $"where k.nazev = '{names[0]}' and f.nazev = '{names[1]}';";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            if (names == null || names.Length < 2)
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
-                {
-
-                    kinosal = new Kinosaly(reader[3].ToString());
-                    filmy = new Filmy(reader[4].ToString());
-                    predstaveni = new Predstaveni(Convert.ToDateTime(reader[0]), Convert.ToDateTime(reader[1]), Convert.ToDouble(reader[2]), kinosal, filmy);
-
-
-                }
-                reader.Close();
-                return predstaveni;
+                throw new Exception("alespon dve jmena musi byt poskytnuto");
             }
+            Predstaveni predstaveni = null;
+            Filmy film = null;
+            Kinosaly kinosal = null;
+            string query = "select p.dat_plan_pred, p.dat_kon_pred, p.delka, k.nazev as nazev_ki, f.nazev as nazev_fi from představení p " +
+                           "join kinosály k on p.id_kis = k.id_kis " +
+                           "join filmy f on p.id_fi = f.id_fi " +
+                           "where k.nazev = @nazev_ki and f.nazev = @nazev_fi;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@nazev_ki", names[0]);
+                cmd.Parameters.AddWithValue("@nazev_fi", names[1]);
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        kinosal = new Kinosaly(reader["nazev_ki"].ToString());
+                        film = new Filmy(reader["nazev_fi"].ToString());
+                        predstaveni = new Predstaveni(Convert.ToDateTime(reader["dat_plan_pred"]), Convert.ToDateTime(reader["dat_kon_pred"]),
+                                                      Convert.ToDouble(reader["delka"]), kinosal, film);
+
+
+                    }
+                }
+               
+            }
+            return predstaveni;
         }
 
         public void Save(Predstaveni element)
         {
             string query = "insert into představení(dat_plan_pred, dat_kon_pred, delka, id_kis, id_fi) " +
-                $"values ('{element.DatPlanovanehoPredstaveni}', '{element.DatKonanehoPredstaveni}', " +
-                $"{element.DelkaPredstaveni}, {GetCinemaTheaterID(element.Kinosal)}, {GetFilmID(element.Film)});";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+                           "values (@dat_plan_pred, @dat_kon_pred, " +
+                           "@delka, @id_kis, @id_fi);";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+
+
+                
                 cmd.ExecuteNonQuery();
             }
         }

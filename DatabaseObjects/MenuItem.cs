@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace db_project
+namespace db_project.DatabaseObjects
 {
-    internal interface JSONFileInterface
+    class MenuItem
     {
-        void ImportFromJSONFileToDataTable(string fileName);
+        private string popis;
+       
     }
 }
