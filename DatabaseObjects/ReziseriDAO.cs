@@ -76,16 +76,24 @@ namespace db_project
 
         public void Save(Reziseri element)
         {
-            string query = "insert into režiséři(jmeno, prijmeni, dat_nar) values (@jmeno, @prijmeni, @dat_nar);";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@jmeno", element.Jmeno);
-                cmd.Parameters.AddWithValue("@prijmeni", element.Prijmeni);
-                cmd.Parameters.AddWithValue("@dat_nar", element.DatNarozeni.ToString("yyyy-MM-dd"));
-                
-                cmd.ExecuteNonQuery();
+                string query = "insert into režiséři(jmeno, prijmeni, dat_nar) values (@jmeno, @prijmeni, @dat_nar);";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@jmeno", element.Jmeno);
+                    cmd.Parameters.AddWithValue("@prijmeni", element.Prijmeni);
+                    cmd.Parameters.AddWithValue("@dat_nar", element.DatNarozeni.ToString("yyyy-MM-dd"));
+
+                    cmd.ExecuteNonQuery();
+                }
             }
+            catch (Exception ex) 
+            {
+                Console.WriteLine("chyba pri vlozeni noveho zaznamu");
+            }
+           
         }
 
         public void Update(Reziseri previousElement, Reziseri updatedElement)

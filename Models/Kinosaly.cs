@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,7 +19,7 @@ namespace db_project
             get => nazev;
             set
             {
-                if (value == null || value.Length < 3 || value.Length > 100)
+                if (value == null || value == "" || value.Length < 3 || value.Length > 100)
                 {
                     throw new Exception("nevalidni delka nazvu");
                 }

@@ -96,16 +96,24 @@ namespace db_project
 
         public void Save(Zanry element)
         {
-            
-            string query = "insert into žánry(nazev, kod) values (@nazev , @kod);";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@nazev", element.Nazev);
-                cmd.Parameters.AddWithValue("@kod", element.Kod);
-                cmd.ExecuteNonQuery();
+                string query = "insert into žánry(nazev, kod) values (@nazev , @kod);";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nazev", element.Nazev);
+                    cmd.Parameters.AddWithValue("@kod", element.Kod);
+                    cmd.ExecuteNonQuery();
+                }
             }
+            catch (Exception ex) 
+            {
+                Console.WriteLine("chyba pri vlozeni noveho zaznamu");
+            }
+            
+            
 
         }
 

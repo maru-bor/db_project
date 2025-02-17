@@ -20,7 +20,7 @@ namespace db_project
             get => jmeno;
             set 
             { 
-                if(value == null || value.Length < 3 || value.Length > 40)
+                if(value == null || value == "" || value.Length < 3 || value.Length > 40)
                 {
                     throw new Exception("nevalidni jmeno");
                 }
@@ -35,7 +35,7 @@ namespace db_project
             get => prijmeni;
             set
             {
-                if (value == null || value.Length < 3 || value.Length > 50)
+                if (value == null || value == "" || value.Length < 3 || value.Length > 50)
                 {
                     throw new Exception("nevalidni prijmeni");
                 }
