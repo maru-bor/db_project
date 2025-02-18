@@ -23,7 +23,7 @@ namespace db_project
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine("chyba pri nacitani dat z JSON souboru" + ex.Message);
+                Console.Error.WriteLine("chyba pri nacitani dat z JSON souboru");
             }
 
         }
