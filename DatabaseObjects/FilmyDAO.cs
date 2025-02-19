@@ -129,12 +129,73 @@ namespace db_project
             }
         }
 
+        public IEnumerable<Filmy> GetAllFilmsByGenre(Zanry zanr) 
+        {
+            string query = "select z.nazev as nazev_zanru, r.jmeno, r.prijmeni, " +
+                           "f.nazev as nazev_filmu, f.dat_vzniku, f.je_stale_promitan from filmy f " +
+                           "join žánry z on f.id_za = z.id_za " +
+                           "join režiséři r on f.id_rez = r.id_rez " +
+                           "where z.nazev = @nazev;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@nazev", zanr.Nazev);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        Reziseri reziser = new Reziseri(reader["jmeno"].ToString(), reader["prijmeni"].ToString());
+                        Zanry zanr2 = new Zanry(reader["nazev_zanru"].ToString());
+                        Filmy film = new Filmy(reader["nazev_filmu"].ToString(), Convert.ToDateTime(reader["dat_vzniku"]), 
+                                     Convert.ToBoolean(reader["je_stale_promitan"]), reziser, zanr2);
+
+                        yield return film;
+
+                    }
+                }
+
+            }
+        }
+
+        public IEnumerable<Filmy> GetAllFilmsByDirector(Reziseri reziser)
+        {
+            string query = "select z.nazev as nazev_zanru, r.jmeno, r.prijmeni, " +
+                           "f.nazev as nazev_filmu, f.dat_vzniku, f.je_stale_promitan from filmy f " +
+                           "join žánry z on f.id_za = z.id_za " +
+                           "join režiséři r on f.id_rez = r.id_rez " +
+                           "where r.jmeno = @jmeno and r.prijmeni = @prijmeni;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
+            {
+                cmd.Parameters.AddWithValue("@jmeno", reziser.Jmeno);
+                cmd.Parameters.AddWithValue("@prijmeni", reziser.Jmeno);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+
+                        Reziseri reziser2 = new Reziseri(reader["jmeno"].ToString(), reader["prijmeni"].ToString());
+                        Zanry zanr2 = new Zanry(reader["nazev_zanru"].ToString());
+                        Filmy film = new Filmy(reader["nazev_filmu"].ToString(), Convert.ToDateTime(reader["dat_vzniku"]),
+                                     Convert.ToBoolean(reader["je_stale_promitan"]), reziser2, zanr2);
+
+                        yield return film;
+
+                    }
+                }
+
+            }
+        }
+
 
         private int GetGenreID(Zanry zanr)
         {
 
             int idValue = 0;
-            string query = $"select id_za from žánry where nazev = @nazev and kod = @kod";
+            string query = "select id_za from žánry where nazev = @nazev and kod = @kod";
             SqlConnection conn = DatabaseSingleton.GetConnInstance();
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {

@@ -98,9 +98,10 @@ namespace db_project
                 }
           }*/
 
+            PredstaveniDAO predstaveniDAO = new PredstaveniDAO();
 
-            SaveElementsUI saveElementsUI = new SaveElementsUI();
-            saveElementsUI.SaveMainMenu();
+
+
 
             
 

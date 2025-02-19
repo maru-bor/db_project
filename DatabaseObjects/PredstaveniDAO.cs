@@ -98,7 +98,11 @@ namespace db_project
             SqlConnection conn = DatabaseSingleton.GetConnInstance();
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-
+                cmd.Parameters.AddWithValue("@dat_plan_pred", element.DatPlanovanehoPredstaveni);
+                cmd.Parameters.AddWithValue("@dat_kon_pred", element.DatKonanehoPredstaveni);
+                cmd.Parameters.AddWithValue("@delka", element.DelkaPredstaveni);
+                cmd.Parameters.AddWithValue("@id_kis" , GetCinemaTheaterID(element.Kinosal));
+                cmd.Parameters.AddWithValue("@id_fi", GetFilmID(element.Film));
 
                 
                 cmd.ExecuteNonQuery();
@@ -107,13 +111,22 @@ namespace db_project
 
         public void Update(Predstaveni previousElement, Predstaveni updatedElement)
         {
-            string query = $"update představení set dat_plan_pred='{updatedElement.DatPlanovanehoPredstaveni}', dat_kon_pred='{updatedElement.DatKonanehoPredstaveni}', " +
-                $"delka={updatedElement.DelkaPredstaveni}, id_kis={GetCinemaTheaterID(updatedElement.Kinosal)}, id_fi={GetFilmID(updatedElement.Film)}" +
-                $"where dat_plan_pred='{previousElement.DatPlanovanehoPredstaveni}' and dat_kon_pred='{previousElement.DatKonanehoPredstaveni}';";
-                 
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "update představení set dat_plan_pred = @dat_plan_pred, dat_kon_pred = @dat_kon_pred, " +
+                           "delka = @delka, id_kis = @id_kis, id_fi = @id_fi" +
+                           "where dat_plan_pred = @prev_dat_plan_pred and dat_kon_pred = @prev_dat_kon_pred;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
+
+                cmd.Parameters.AddWithValue("@dat_plan_pred", updatedElement.DatPlanovanehoPredstaveni);
+                cmd.Parameters.AddWithValue("@dat_kon_pred", updatedElement.DatKonanehoPredstaveni);
+                cmd.Parameters.AddWithValue("@delka", updatedElement.DelkaPredstaveni);
+                cmd.Parameters.AddWithValue("@id_kis", GetCinemaTheaterID(updatedElement.Kinosal));
+                cmd.Parameters.AddWithValue("@id_fi", GetFilmID(updatedElement.Film));
+
+                cmd.Parameters.AddWithValue("@prev_dat_plan_pred", previousElement.DatPlanovanehoPredstaveni);
+                cmd.Parameters.AddWithValue("@prev_dat_kon_pred", previousElement.DatKonanehoPredstaveni);
+
                 cmd.ExecuteNonQuery();
             }
         }
@@ -122,40 +135,58 @@ namespace db_project
         private int GetCinemaTheaterID(Kinosaly kinosal)
         {
             int idValue = 0;
-            string query = $"select id_za from kinosály where nazev = '{kinosal.Nazev}' and cis_sal = '{kinosal.CisloSalu}';";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "select id_kis from kinosály where nazev = @nazev and cis_sal = @cis_sal;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                cmd.Parameters.AddWithValue("@nazev", kinosal.Nazev);
+                cmd.Parameters.AddWithValue("@cis_sal", kinosal.CisloSalu);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
+                    while (reader.Read())
+                    {
 
-                    idValue = Convert.ToInt32(reader[0]);
+                        idValue = Convert.ToInt32(reader[0]);
 
+                    }
+                  
+                    
                 }
-                reader.Close();
-                return idValue;
+
+                    
+              
             }
+            return idValue;
         }
 
 
         private int GetFilmID(Filmy film)
         {
             int idValue = 0;
-            string query = $"select id_za from filmy where nazev = '{film.Nazev}' and dat_vznik='{film.DatVzniku}';";
-            using (SqlConnection conn = DatabaseSingleton.GetConnInstance())
+            string query = "select id_fi from filmy where nazev = @nazev and dat_vzniku = @dat_vznik;";
+            SqlConnection conn = DatabaseSingleton.GetConnInstance();
+            using (SqlCommand cmd = new SqlCommand(query, conn))
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+
+                cmd.Parameters.AddWithValue("@nazev", film.Nazev);
+                cmd.Parameters.AddWithValue("@dat_vznik", film.DatVzniku);
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
+                    while (reader.Read())
+                    {
 
-                    idValue = Convert.ToInt32(reader[0]);
+                        idValue = Convert.ToInt32(reader[0]);
 
+                    }
+                   
+                    
                 }
-                reader.Close();
-                return idValue;
+                    
+                
             }
+            return idValue;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace db_project
     {
         public void Delete(Zanry element)
         {
-            string query = $"delete from žánry where nazev = @nazev";
+            string query = "delete from žánry where nazev = @nazev";
 
 
             SqlConnection conn = DatabaseSingleton.GetConnInstance();
@@ -30,7 +30,7 @@ namespace db_project
 
         public IEnumerable<Zanry> GetAll()
         {
-            string query = $"select * from žánry;";
+            string query = "select * from žánry;";
             SqlConnection conn = DatabaseSingleton.GetConnInstance();
             
                 
@@ -120,7 +120,7 @@ namespace db_project
         public void Update(Zanry previousElement, Zanry updatedElement)
         {
            
-            string query = $"update žánry set nazev = @nazev, kod = @kod where nazev = @prevNazev and kod = @prevKod;";
+            string query = "update žánry set nazev = @nazev, kod = @kod where nazev = @prevNazev and kod = @prevKod;";
             SqlConnection conn = DatabaseSingleton.GetConnInstance();
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {

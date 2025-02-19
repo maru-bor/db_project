@@ -99,6 +99,12 @@ namespace db_project
             Zanr = zanr;
         }
 
+        public Filmy(string nazev, DateTime datVzniku, Reziseri reziser, Zanry zanr) : this(nazev, datVzniku)
+        {
+            Reziser = reziser;
+            Zanr = zanr;
+        }
+
         public Filmy(string nazev)
         {
             Nazev = nazev;
