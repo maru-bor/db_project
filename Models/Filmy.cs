@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace db_project
 {
-    /// <summary>
-    /// Class that represents the data table 'filmy' in the database
-    /// </summary>
     internal class Filmy
     {
         private int id;
@@ -122,8 +119,7 @@ namespace db_project
 
         public override string? ToString()
         {
-            return $"název filmu: {nazev} , dat. vzniku: {datVzniku}, stále promítán v kinech: " +
-                   $"{jeStalePromitanVKinech}, žánr: {Zanr.Nazev}, režisér: {Reziser.Jmeno} {Reziser.Prijmeni}";
+            return $"název filmu: {nazev} , dat. vzniku: {datVzniku}, stále promítán v kinech: {jeStalePromitanVKinech}, žánr: {Zanr.Nazev}, režisér: {Reziser.Jmeno} {Reziser.Prijmeni}";
         }
     }
 }
