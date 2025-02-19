@@ -119,17 +119,25 @@ namespace db_project
 
         public void Update(Zanry previousElement, Zanry updatedElement)
         {
-           
-            string query = "update žánry set nazev = @nazev, kod = @kod where nazev = @prevNazev and kod = @prevKod;";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            try 
             {
-                cmd.Parameters.AddWithValue("@nazev", updatedElement.Nazev);
-                cmd.Parameters.AddWithValue("@kod", updatedElement.Kod);
-                cmd.Parameters.AddWithValue("@prevNazev", previousElement.Nazev);
-                cmd.Parameters.AddWithValue("@prevKod", previousElement.Kod);
-                cmd.ExecuteNonQuery();
+                string query = "update žánry set nazev = @nazev, kod = @kod where nazev = @prevNazev and kod = @prevKod;";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nazev", updatedElement.Nazev);
+                    cmd.Parameters.AddWithValue("@kod", updatedElement.Kod);
+                    cmd.Parameters.AddWithValue("@prevNazev", previousElement.Nazev);
+                    cmd.Parameters.AddWithValue("@prevKod", previousElement.Kod);
+                    cmd.ExecuteNonQuery();
+                }
             }
+            catch(Exception ex)
+            {
+                Console.WriteLine("chyba při upravování záznamu");
+            }
+           
+            
         }
 
 
