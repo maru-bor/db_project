@@ -7,8 +7,15 @@ using System.Threading.Tasks;
 
 namespace db_project
 {
+    /// <summary>
+    /// Class that imports JSON data from a file into the data table 'žánry'
+    /// </summary>
     class ZanryJSON : JSONFileInterface
     {
+        /// <summary>
+        /// Imports JSON data from a file, deserializes it into a list of objects and imports it into a data table
+        /// </summary>
+        /// <param name="fileName"></param>
         public void ImportFromJSONFileToDataTable(string fileName)
         {
             try

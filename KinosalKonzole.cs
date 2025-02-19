@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace db_project
 {
+    /// <summary>
+    /// Class that represents the console user interface
+    /// </summary>
     internal class KinosalKonzole
     {
         private FilmyDAO filmyDAO = new FilmyDAO();
@@ -177,6 +180,9 @@ namespace db_project
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void DirectorMenu()
         {
             int userInput = 0;
