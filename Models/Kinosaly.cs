@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace db_project
 {
+    /// <summary>
+    /// Class that represents the data table 'kinosály' in the database
+    /// </summary>
     internal class Kinosaly
     {
         private int id_kis;
