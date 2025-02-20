@@ -16,6 +16,10 @@ namespace db_project
         private ZanryDAO zanryDAO = new ZanryDAO();
         private ReziseriDAO reziseriDAO = new ReziseriDAO();
 
+
+        /// <summary>
+        /// Calls the method for the main menu and checks for connection to the database
+        /// </summary>
         public void StartMenu()
         {
             try
@@ -29,6 +33,9 @@ namespace db_project
             Console.WriteLine("Konec programu");
         }
 
+        /// <summary>
+        /// Prints out main user interface to the console
+        /// </summary>
 
         public void MainMenu()
         {
@@ -59,17 +66,27 @@ namespace db_project
             }
             catch (Exception ex)
             {
-                Console.WriteLine("špatně zadaná hodnota!!");
+                Console.WriteLine("špatně zadaná hodnota!");
                 MainMenu();
             }
             
            
         }
 
+        /// <summary>
+        /// Joins all the films into a string and returns the string
+        /// </summary>
+        /// <returns> A string containing all the films in the database </returns>
         public string GetAllFilms()
         {
             return string.Join("\n", filmyDAO.GetAll());
         }
+
+        /// <summary>
+        /// Returns a Film object that matches the respective name parameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns> A Film object that has the respective name parameter </returns>
 
         public Filmy GetFilmByName(string name)
         {
@@ -77,11 +94,24 @@ namespace db_project
             return filmyDAO.GetByValueName(film.Nazev);
         }
 
+        /// <summary>
+        /// Joins all films matched by the given genre name into a string 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns> A string containing all the films that match the given genre in the database </returns>
+
         public string WriteOutAllFilmsByGenre(string name)
         {
             Zanry zanr = new Zanry(name);
             return string.Join("\n", filmyDAO.GetAllFilmsByGenre(zanr));
         }
+
+        /// <summary>
+        /// Joins all films matched by the given director name and surname into a string 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="surname"></param>
+        /// <returns> A string containing all the films that match the given director in the database </returns>
 
         public string WriteOutAllFilmsByDirector(string name, string surname)
         {
@@ -89,27 +119,51 @@ namespace db_project
             return string.Join("\n", filmyDAO.GetAllFilmsByDirector(reziser));
         }
 
+        /// <summary>
+        /// Joins all the genres into a string and returns the string
+        /// </summary>
+        /// <returns>  A string containing all the genres in the database </returns>
+
         public string GetAllGenres()
         {
             return string.Join("\n", zanryDAO.GetAll());
         }
 
+        /// <summary>
+        ///  Returns a Zanry object that matches the name parameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns> A Zanry object that matches name parameter </returns>
         public Zanry GetGenreByName(string name)
         {
             Zanry zanr = new Zanry(name);
             return zanryDAO.GetByValueName(zanr.Nazev);
         }
 
+        /// <summary>
+        /// Joins all the directors into a string and returns the string
+        /// </summary>
+        /// <returns> A string containing all the directors in the database </returns>
         public string GetAllDirectors()
         {
             return string.Join("\n", reziseriDAO.GetAll());
         }
 
+        /// <summary>
+        /// Returns a Reziseri object that matches the name and surname parameter
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="surname"></param>
+        /// <returns> A Reziseri object that matches name and surname parameter </returns>
         public Reziseri GetDirectorByName(string name, string surname)
         {
             Reziseri zanr = new Reziseri(name, surname);
             return reziseriDAO.GetByValueName(name, surname);
         }
+
+        /// <summary>
+        /// Prints out the film menu user interface to the console
+        /// </summary>
 
         public void FilmMenu()
         {
@@ -154,6 +208,9 @@ namespace db_project
             }
         }
 
+        /// <summary>
+        /// Prints out the genre menu user interface to the console
+        /// </summary>
         public void GenreMenu()
         {
             int userInput = 0;
@@ -181,7 +238,7 @@ namespace db_project
         }
 
         /// <summary>
-        /// 
+        /// Prints out the director menu user interface to the console
         /// </summary>
         public void DirectorMenu()
         {

@@ -11,17 +11,8 @@ namespace db_project
     {
         static void Main(string[] args)
         {
-
             KinosalKonzole kinosalKonzole = new KinosalKonzole();
             kinosalKonzole.StartMenu();
-
-
-
-
-            
-
-            
-
         }
     }
 }
