@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace db_project
 {
+
+    /// <summary>
+    /// Interface for implementing the DAO design pattern
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public interface DAOInterface<T> 
     {
         T GetByValueName(params string[] names);

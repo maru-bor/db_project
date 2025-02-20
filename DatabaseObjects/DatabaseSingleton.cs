@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace db_project
 {
+
+    /// <summary>
+    /// Class that implements the Singleton design pattern for connecting to the database
+    /// </summary>
     internal class DatabaseSingleton
     {
           private static SqlConnection? _connInstance = null;
@@ -16,6 +20,10 @@ namespace db_project
 
           private DatabaseSingleton() {} 
 
+          /// <summary>
+          /// Reads from a configuration file and creates a single instance of a SqlConnection object
+          /// </summary>
+          /// <returns> A SqlConnection object with open connection </returns>
           public static SqlConnection GetConnInstance()
           {
             lock (_lock) 
@@ -42,15 +50,11 @@ namespace db_project
              
           }
 
-          public static void CloseConn()
-          {
-              if(_connInstance != null)
-              {
-                  _connInstance.Close();
-                  _connInstance.Dispose();
-              }
-          }
-
+          /// <summary>
+          /// Reads key value pairs from the configuration file and returns the values as a string
+          /// </summary>
+          /// <param name="key"></param>
+          /// <returns> A value from the key value pair in a configuration file</returns>
 
           public static string ConfSetting(string key)
           {
