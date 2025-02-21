@@ -66,7 +66,7 @@ namespace db_project
             }
             catch (Exception ex)
             {
-                Console.WriteLine("(!!!) Špatná hodnota: zkontrolujte, zda-li tato hodnota v databázi existuje nebo je ve správném formátu");
+                Console.WriteLine("(!!!) Chyba při zadávání hodnoty: zkontrolujte, zda-li tato hodnota v databázi existuje nebo je ve správném formátu");
                 MainMenu();
             }
             

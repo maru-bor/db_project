@@ -19,15 +19,23 @@ namespace db_project
         /// <param name="element"></param>
         public void Delete(Reziseri element)
         {
-            string query = "delete from režiséři where jmeno = @jmeno and prijmeni = @prijmeni and dat_nar = @dat_nar";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@jmeno", element.Jmeno);
-                cmd.Parameters.AddWithValue("@prijmeni", element.Prijmeni);
-                cmd.Parameters.AddWithValue("@dat_nar", element.DatNarozeni);
 
-                cmd.ExecuteNonQuery();
+            try
+            {
+                string query = "delete from režiséři where jmeno = @jmeno and prijmeni = @prijmeni and dat_nar = @dat_nar";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@jmeno", element.Jmeno);
+                    cmd.Parameters.AddWithValue("@prijmeni", element.Prijmeni);
+                    cmd.Parameters.AddWithValue("@dat_nar", element.DatNarozeni);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při mazání záznamu v režisérech");
             }
         }
 
@@ -115,7 +123,7 @@ namespace db_project
             }
             catch (Exception ex) 
             {
-                Console.WriteLine("chyba pri vlozeni noveho zaznamu");
+                Console.WriteLine("Chyba při vkládání záznamu v režisérech");
             }
            
         }
@@ -127,21 +135,29 @@ namespace db_project
         /// <param name="updatedElement"></param>
         public void Update(Reziseri previousElement, Reziseri updatedElement)
         {
-            string query = "update režiséři set jmeno = @jmeno, prijmeni = @prijmeni, dat_nar = @dat_nar " +
-                           "where jmeno = @prev_jmeno and prijmeni = @prev_prijmeni and dat_nar = @prev_dat_nar;";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@jmeno", updatedElement.Jmeno);
-                cmd.Parameters.AddWithValue("@prijmeni", updatedElement.Prijmeni);
-                cmd.Parameters.AddWithValue("@dat_nar", updatedElement.DatNarozeni.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                string query = "update režiséři set jmeno = @jmeno, prijmeni = @prijmeni, dat_nar = @dat_nar " +
+                           "where jmeno = @prev_jmeno and prijmeni = @prev_prijmeni and dat_nar = @prev_dat_nar;";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@jmeno", updatedElement.Jmeno);
+                    cmd.Parameters.AddWithValue("@prijmeni", updatedElement.Prijmeni);
+                    cmd.Parameters.AddWithValue("@dat_nar", updatedElement.DatNarozeni.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 
-                cmd.Parameters.AddWithValue("@prev_jmeno", previousElement.Jmeno);
-                cmd.Parameters.AddWithValue("@prev_prijmeni", previousElement.Prijmeni);
-                cmd.Parameters.AddWithValue("@prev_dat_nar", previousElement.DatNarozeni.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                    cmd.Parameters.AddWithValue("@prev_jmeno", previousElement.Jmeno);
+                    cmd.Parameters.AddWithValue("@prev_prijmeni", previousElement.Prijmeni);
+                    cmd.Parameters.AddWithValue("@prev_dat_nar", previousElement.DatNarozeni.ToString("yyyy-MM-dd HH:mm:ss.fff"));
 
-                cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při upravování záznamu v režisérech");
+            }
+            
         }
     }
 }

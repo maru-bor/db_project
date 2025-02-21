@@ -19,15 +19,23 @@ namespace db_project
         /// <param name="element"></param>
         public void Delete(Kinosaly element)
         {
-            string query = "delete from kinosály where nazev = @nazev and cis_sal = @cis_sal;";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@nazev", element.Nazev);
-                cmd.Parameters.AddWithValue("@cis_sal", element.CisloSalu);
+                string query = "delete from kinosály where nazev = @nazev and cis_sal = @cis_sal;";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nazev", element.Nazev);
+                    cmd.Parameters.AddWithValue("@cis_sal", element.CisloSalu);
 
-                cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při mazání záznamu v kinosálech");
+            }
+            
         }
 
         /// <summary>
@@ -116,19 +124,27 @@ namespace db_project
         /// <param name="updatedElement"></param>
         public void Update(Kinosaly previousElement, Kinosaly updatedElement)
         {
-            string query = "update kinosály set nazev = @nazev, cis_sal = @cis_sal " +
-                           "where nazev = @prev_nazev and cis_sal = @prev_cis_sal;";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@nazev", updatedElement.Nazev);
-                cmd.Parameters.AddWithValue("@cis_sal", updatedElement.CisloSalu);
+                string query = "update kinosály set nazev = @nazev, cis_sal = @cis_sal " +
+                            "where nazev = @prev_nazev and cis_sal = @prev_cis_sal;";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nazev", updatedElement.Nazev);
+                    cmd.Parameters.AddWithValue("@cis_sal", updatedElement.CisloSalu);
 
-                cmd.Parameters.AddWithValue("@prev_nazev", previousElement.Nazev);
-                cmd.Parameters.AddWithValue("@prev_cis_sal", previousElement.CisloSalu);
+                    cmd.Parameters.AddWithValue("@prev_nazev", previousElement.Nazev);
+                    cmd.Parameters.AddWithValue("@prev_cis_sal", previousElement.CisloSalu);
 
-                cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při upravování záznamu v kinosálech");
+            }
+            
         }
     }
 }

@@ -20,16 +20,24 @@ namespace db_project
         /// <param name="element"></param>
         public void Delete(Filmy element)
         {
-            string query = "delete from filmy where nazev = @nazev and dat_vznik = @dat_vznik;";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@nazev", element.Nazev);
-                cmd.Parameters.AddWithValue("@dat_vznik", element.DatVzniku);
-               
+                string query = "delete from filmy where nazev = @nazev and dat_vznik = @dat_vznik;";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nazev", element.Nazev);
+                    cmd.Parameters.AddWithValue("@dat_vznik", element.DatVzniku);
 
-                cmd.ExecuteNonQuery();
+
+                    cmd.ExecuteNonQuery();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při mazání záznamu ve filmech");
+            }
+            
         }
 
         /// <summary>
@@ -114,20 +122,28 @@ namespace db_project
 
         public void Save(Filmy element)
         {
-            string query = "insert into filmy(nazev, dat_vzniku, je_stale_promitan, id_za, id_rez) " +
+            try
+            {
+                string query = "insert into filmy(nazev, dat_vzniku, je_stale_promitan, id_za, id_rez) " +
                            "values (@nazev, @dat_vznik, @je_stale_promitan, " +
                            "@id_za, @id_rez);";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
-            {
-                cmd.Parameters.AddWithValue("@nazev", element.Nazev);
-                cmd.Parameters.AddWithValue("@dat_vznik", element.DatVzniku);
-                cmd.Parameters.AddWithValue("@je_stale_promitan", element.JeStalePromitanVKinech);
-                cmd.Parameters.AddWithValue("@id_za", GetGenreID(element.Zanr));
-                cmd.Parameters.AddWithValue("@id_rez", GetDirectorID(element.Reziser));
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@nazev", element.Nazev);
+                    cmd.Parameters.AddWithValue("@dat_vznik", element.DatVzniku);
+                    cmd.Parameters.AddWithValue("@je_stale_promitan", element.JeStalePromitanVKinech);
+                    cmd.Parameters.AddWithValue("@id_za", GetGenreID(element.Zanr));
+                    cmd.Parameters.AddWithValue("@id_rez", GetDirectorID(element.Reziser));
 
-                cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při vkládání záznamu ve filmech");
+            }
+            
         }
 
         /// <summary>
@@ -138,26 +154,34 @@ namespace db_project
 
         public void Update(Filmy previousElement, Filmy updatedElement)
         {
-            string query = "update filmy set nazev = @nazev, dat_vzniku = @dat_vznik, " +
-                           "je_stale_promitan = @je_stale_promitan, id_za = @id_za, id_rez = @id_rez " +
-                           "where nazev = @prev_nazev and dat_vznik = @prev_dat_vznik and id_rez = @prev_id_rez";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            try
             {
-                
-                cmd.Parameters.AddWithValue("@nazev", updatedElement.Nazev);
-                cmd.Parameters.AddWithValue("@dat_vznik", updatedElement.DatVzniku);
-                cmd.Parameters.AddWithValue("@je_stale_promitan", updatedElement.JeStalePromitanVKinech);
-                cmd.Parameters.AddWithValue("@id_za", GetGenreID(updatedElement.Zanr));
-                cmd.Parameters.AddWithValue("@id_rez", GetDirectorID(updatedElement.Reziser));
+                string query = "update filmy set nazev = @nazev, dat_vzniku = @dat_vznik, " +
+                          "je_stale_promitan = @je_stale_promitan, id_za = @id_za, id_rez = @id_rez " +
+                          "where nazev = @prev_nazev and dat_vznik = @prev_dat_vznik and id_rez = @prev_id_rez";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
 
-                cmd.Parameters.AddWithValue("@prev_nazev", previousElement.Nazev);
-                cmd.Parameters.AddWithValue("@prev_dat_vznik", previousElement.DatVzniku);
-                cmd.Parameters.AddWithValue("@prev_id_rez", GetDirectorID(previousElement.Reziser));
+                    cmd.Parameters.AddWithValue("@nazev", updatedElement.Nazev);
+                    cmd.Parameters.AddWithValue("@dat_vznik", updatedElement.DatVzniku);
+                    cmd.Parameters.AddWithValue("@je_stale_promitan", updatedElement.JeStalePromitanVKinech);
+                    cmd.Parameters.AddWithValue("@id_za", GetGenreID(updatedElement.Zanr));
+                    cmd.Parameters.AddWithValue("@id_rez", GetDirectorID(updatedElement.Reziser));
+
+                    cmd.Parameters.AddWithValue("@prev_nazev", previousElement.Nazev);
+                    cmd.Parameters.AddWithValue("@prev_dat_vznik", previousElement.DatVzniku);
+                    cmd.Parameters.AddWithValue("@prev_id_rez", GetDirectorID(previousElement.Reziser));
 
 
-                cmd.ExecuteNonQuery();
+                    cmd.ExecuteNonQuery();
+                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při upravování záznamu ve filmech");
+            }
+           
         }
 
         public IEnumerable<Filmy> GetAllFilmsByGenre(Zanry zanr) 
@@ -228,29 +252,38 @@ namespace db_project
         /// <returns> ID of the specified Zanry object in the database</returns>
         private int GetGenreID(Zanry zanr)
         {
-
-            int idValue = 0;
-            string query = "select id_za from žánry where nazev = @nazev and kod = @kod";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            try
             {
-
-                cmd.Parameters.AddWithValue("@nazev", zanr.Nazev);
-                cmd.Parameters.AddWithValue("@kod", zanr.Kod);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                int idValue = 0;
+                string query = "select id_za from žánry where nazev = @nazev and kod = @kod";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    while (reader.Read())
-                    {
 
-                        idValue = Convert.ToInt32(reader[0]);
+                    cmd.Parameters.AddWithValue("@nazev", zanr.Nazev);
+                    cmd.Parameters.AddWithValue("@kod", zanr.Kod);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+
+                            idValue = Convert.ToInt32(reader[0]);
+
+                        }
 
                     }
-                   
                 }
+
+                return idValue;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při získávání ID z databáze");
+                return 0;
             }
 
-            return idValue;
+           
         }
 
         /// <summary>
@@ -260,28 +293,37 @@ namespace db_project
         /// <returns> ID of the specified Reziseri object in the database</returns>
         private int GetDirectorID(Reziseri reziser)
         {
-
-            int idValue = 0;
-            string query = "select id_rez from režiséři where jmeno = @jmeno and prijmeni = @prijmeni and dat_nar = @dat_nar;";
-            SqlConnection conn = DatabaseSingleton.GetConnInstance();
-            using (SqlCommand cmd = new SqlCommand(query, conn))
+            try
             {
-                cmd.Parameters.AddWithValue("@jmeno", reziser.Jmeno);
-                cmd.Parameters.AddWithValue("@prijmeni", reziser.Prijmeni);
-                cmd.Parameters.AddWithValue("@dat_nar", reziser.DatNarozeni);
-
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                int idValue = 0;
+                string query = "select id_rez from režiséři where jmeno = @jmeno and prijmeni = @prijmeni and dat_nar = @dat_nar;";
+                SqlConnection conn = DatabaseSingleton.GetConnInstance();
+                using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    while (reader.Read())
+                    cmd.Parameters.AddWithValue("@jmeno", reziser.Jmeno);
+                    cmd.Parameters.AddWithValue("@prijmeni", reziser.Prijmeni);
+                    cmd.Parameters.AddWithValue("@dat_nar", reziser.DatNarozeni);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
+                        while (reader.Read())
+                        {
 
-                        idValue = Convert.ToInt32(reader[0]);
+                            idValue = Convert.ToInt32(reader[0]);
 
+                        }
                     }
+
                 }
-               
+                return idValue;
             }
-            return idValue;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Chyba při získávání ID z databáze");
+                return 0;
+            }
+
+            
         }
 
        

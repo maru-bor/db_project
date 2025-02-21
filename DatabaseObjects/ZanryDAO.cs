@@ -39,9 +39,6 @@ namespace db_project
                 Console.WriteLine("Chyba při mazání záznamu v žánrech");
             }
            
-                    
-                
-            
         }
 
         /// <summary>
@@ -51,6 +48,7 @@ namespace db_project
 
         public IEnumerable<Zanry> GetAll()
         {
+
             string query = "select * from žánry;";
             SqlConnection conn = DatabaseSingleton.GetConnInstance();
             
@@ -144,8 +142,6 @@ namespace db_project
                 Console.WriteLine("Chyba při vkládání záznamu v žánrech");
             }
             
-            
-
         }
 
         /// <summary>
