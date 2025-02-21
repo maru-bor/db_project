@@ -45,9 +45,9 @@ namespace db_project
         }
 
         /// <summary>
-        /// Assigns all the values in the data table to a collection of Zanry objects 
+        /// Assigns all the values in the data table to Zanry objects 
         /// </summary>
-        /// <returns> A collection of Zanry objects</returns>
+        /// <returns> An enumerator over the Zanry objects</returns>
 
         public IEnumerable<Zanry> GetAll()
         {
@@ -64,8 +64,8 @@ namespace db_project
                         
                          while (reader.Read())
                          {
-                            Zanry zanr = new Zanry(Convert.ToInt32(reader["id_za"]), reader["nazev"].ToString(), Convert.ToInt32(reader["kod"]));
-                            yield return zanr;
+                            Zanry z = new Zanry(Convert.ToInt32(reader["id_za"]), reader["nazev"].ToString(), Convert.ToInt32(reader["kod"]));
+                            yield return z;
 
                          }
                         
@@ -79,7 +79,7 @@ namespace db_project
         }
 
         /// <summary>
-        /// Selects all the data from a table row that contains the given name parameter and assigns it to a new Zanry object
+        /// Selects all the data from a row that matches the given name parameter and assigns it to a new Zanry object
         /// </summary>
         /// <param name="names"></param>
         /// <returns> A Zanry object with the given name parameter</returns>
@@ -89,7 +89,7 @@ namespace db_project
         {
             if (names == null || names.Length == 0)
             {
-                throw new Exception("You must provide at least one name!");
+                throw new Exception("Alespoň jedno jméno musí být poskytnuto");
             }
 
             Zanry? z = null;
@@ -122,7 +122,7 @@ namespace db_project
         }
 
         /// <summary>
-        /// Inserts a new row with data into the data table
+        /// Inserts a new row into the data table
         /// </summary>
         /// <param name="element"></param>
         public void Save(Zanry element)

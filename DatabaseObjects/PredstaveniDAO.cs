@@ -8,8 +8,15 @@ using System.Xml.Linq;
 
 namespace db_project
 {
+    /// <summary>
+    /// Class implementing the DAO interface for the model class Predstaveni
+    /// </summary>
     internal class PredstaveniDAO : DAOInterface<Predstaveni>
     {
+        /// <summary>
+        /// Deletes the row based on the element parameter from the data table
+        /// </summary>
+        /// <param name="element"></param>
         public void Delete(Predstaveni element)
         {
             string query = "delete p from představení p " +
@@ -27,6 +34,11 @@ namespace db_project
             }
         }
 
+        /// <summary>
+        /// Assigns all the values in the data table to Predstaveni objects 
+        /// </summary>
+        /// <returns> An enumerator over the Predstaveni objects</returns>
+
         public IEnumerable<Predstaveni> GetAll()
         {
             string query = "select p.dat_plan_pred, p.dat_kon_pred, p.delka, k.nazev as nazev_ki, f.nazev as nazev_fi from představení p " +
@@ -40,11 +52,11 @@ namespace db_project
                     while (reader.Read())
                     {
 
-                        Kinosaly kinosal = new Kinosaly(reader["nazev_ki"].ToString());
-                        Filmy film = new Filmy(reader["nazev_fi"].ToString());
-                        Predstaveni predstaveni = new Predstaveni(Convert.ToDateTime(reader["dat_plan_pred"]), Convert.ToDateTime(reader["dat_kon_pred"]), 
-                                                  Convert.ToDouble(reader["delka"]), kinosal, film);
-                        yield return predstaveni;
+                        Kinosaly k = new Kinosaly(reader["nazev_ki"].ToString());
+                        Filmy f = new Filmy(reader["nazev_fi"].ToString());
+                        Predstaveni p = new Predstaveni(Convert.ToDateTime(reader["dat_plan_pred"]), Convert.ToDateTime(reader["dat_kon_pred"]), 
+                                                  Convert.ToDouble(reader["delka"]), k, f);
+                        yield return p;
 
                     }
                 }
@@ -54,15 +66,22 @@ namespace db_project
             }
         }
 
+        /// <summary>
+        /// Selects all the data from a row that matches the given name parameter and assigns it to a new Predstaveni object
+        /// </summary>
+        /// <param name="names"></param>
+        /// <returns> A Predstaveni object with the given name parameter</returns>
+        /// <exception cref="Exception"></exception>
+
         public Predstaveni GetByValueName(params string[] names)
         {
             if (names == null || names.Length < 2)
             {
                 throw new Exception("alespon dve jmena musi byt poskytnuto");
             }
-            Predstaveni predstaveni = null;
-            Filmy film = null;
-            Kinosaly kinosal = null;
+            Predstaveni p = null;
+            Filmy f = null;
+            Kinosaly k = null;
             string query = "select p.dat_plan_pred, p.dat_kon_pred, p.delka, k.nazev as nazev_ki, f.nazev as nazev_fi from představení p " +
                            "join kinosály k on p.id_kis = k.id_kis " +
                            "join filmy f on p.id_fi = f.id_fi " +
@@ -77,18 +96,23 @@ namespace db_project
                     while (reader.Read())
                     {
 
-                        kinosal = new Kinosaly(reader["nazev_ki"].ToString());
-                        film = new Filmy(reader["nazev_fi"].ToString());
-                        predstaveni = new Predstaveni(Convert.ToDateTime(reader["dat_plan_pred"]), Convert.ToDateTime(reader["dat_kon_pred"]),
-                                                      Convert.ToDouble(reader["delka"]), kinosal, film);
+                        k = new Kinosaly(reader["nazev_ki"].ToString());
+                        f = new Filmy(reader["nazev_fi"].ToString());
+                        p = new Predstaveni(Convert.ToDateTime(reader["dat_plan_pred"]), Convert.ToDateTime(reader["dat_kon_pred"]),
+                                                      Convert.ToDouble(reader["delka"]), k, f);
 
 
                     }
                 }
                
             }
-            return predstaveni;
+            return p;
         }
+
+        /// <summary>
+        /// Inserts a new row into the data table
+        /// </summary>
+        /// <param name="element"></param>
 
         public void Save(Predstaveni element)
         {
@@ -110,7 +134,7 @@ namespace db_project
         }
 
         /// <summary>
-        /// Updates the current row of the data table to new values 
+        /// Updates the specified row of the data table with new values
         /// </summary>
         /// <param name="previousElement"></param>
         /// <param name="updatedElement"></param>
@@ -138,6 +162,11 @@ namespace db_project
         }
 
 
+        /// <summary>
+        /// Returns the ID of the specified Kinosaly object in the database
+        /// </summary>
+        /// <param name="film"></param>
+        /// <returns> ID of the specified Kinosaly object in the database</returns>
         private int GetCinemaTheaterID(Kinosaly kinosal)
         {
             int idValue = 0;
@@ -166,7 +195,11 @@ namespace db_project
             return idValue;
         }
 
-
+        /// <summary>
+        /// Returns the ID of the specified Filmy object in the database
+        /// </summary>
+        /// <param name="film"></param>
+        /// <returns> ID of the specified Filmy object in the database</returns>
         private int GetFilmID(Filmy film)
         {
             int idValue = 0;

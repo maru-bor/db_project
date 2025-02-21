@@ -8,8 +8,16 @@ using System.Xml.Linq;
 
 namespace db_project
 {
+    /// <summary>
+    /// Class implementing the DAO interface for the model class Filmy
+    /// </summary>
     internal class FilmyDAO : DAOInterface<Filmy>
     {
+        
+        /// <summary>
+        /// Deletes the row based on the element parameter from the data table
+        /// </summary>
+        /// <param name="element"></param>
         public void Delete(Filmy element)
         {
             string query = "delete from filmy where nazev = @nazev and dat_vznik = @dat_vznik;";
@@ -24,6 +32,11 @@ namespace db_project
             }
         }
 
+        /// <summary>
+        /// Assigns all the values in the data table to Filmy objects 
+        /// </summary>
+        /// <returns> An enumerator over the Filmy objects</returns>
+
         public IEnumerable<Filmy> GetAll()
         {
             string query = "select f.nazev, f.dat_vzniku, f.je_stale_promitan, z.nazev as nazev_za, r.jmeno, r.prijmeni from filmy f " +
@@ -37,17 +50,24 @@ namespace db_project
                     while (reader.Read())
                     {
 
-                        Reziseri reziser = new Reziseri(reader["jmeno"].ToString(), reader["prijmeni"].ToString());
-                        Zanry zanr = new Zanry(reader["nazev_za"].ToString());
-                        Filmy film = new Filmy(reader["nazev"].ToString(), Convert.ToDateTime(reader["dat_vzniku"]), Convert.ToBoolean(reader["je_stale_promitan"]), reziser, zanr);
+                        Reziseri r = new Reziseri(reader["jmeno"].ToString(), reader["prijmeni"].ToString());
+                        Zanry z = new Zanry(reader["nazev_za"].ToString());
+                        Filmy f = new Filmy(reader["nazev"].ToString(), Convert.ToDateTime(reader["dat_vzniku"]), Convert.ToBoolean(reader["je_stale_promitan"]), r, z);
 
-                        yield return film;
+                        yield return f;
 
                     }
                 }
                     
             }
         }
+
+        /// <summary>
+        /// Selects all the data from a row that matches the given name parameter and assigns it to a new Filmy object
+        /// </summary>
+        /// <param name="names"></param>
+        /// <returns> A Filmy object with the given name parameter</returns>
+        /// <exception cref="Exception"></exception>
 
         public Filmy GetByValueName(params string[] names)
         {
@@ -56,9 +76,9 @@ namespace db_project
                 throw new Exception("alespon jedno jmeno musi byt poskytnuto");
             }
 
-            Filmy film = null;
-            Reziseri reziser = null;
-            Zanry zanr = null;
+            Filmy f = null;
+            Reziseri r = null;
+            Zanry z = null;
             string query = "select f.nazev, f.dat_vzniku, f.je_stale_promitan, z.nazev as nazev_za, r.jmeno, r.prijmeni from filmy f " +
                            "join žánry z on f.id_za = z.id_za " +
                            "join režiséři r on f.id_rez = r.id_rez " +
@@ -73,9 +93,9 @@ namespace db_project
                     while (reader.Read())
                     {
 
-                        reziser = new Reziseri(reader["jmeno"].ToString(), reader["prijmeni"].ToString());
-                        zanr = new Zanry(reader["nazev_za"].ToString());
-                        film = new Filmy(reader["nazev"].ToString(), Convert.ToDateTime(reader["dat_vzniku"]), Convert.ToBoolean(reader["je_stale_promitan"]), reziser, zanr);
+                        r = new Reziseri(reader["jmeno"].ToString(), reader["prijmeni"].ToString());
+                        z = new Zanry(reader["nazev_za"].ToString());
+                        f = new Filmy(reader["nazev"].ToString(), Convert.ToDateTime(reader["dat_vzniku"]), Convert.ToBoolean(reader["je_stale_promitan"]), r, z);
 
                     }
                 }
@@ -84,8 +104,13 @@ namespace db_project
                
                 
             }
-            return film;
+            return f;
         }
+
+        /// <summary>
+        /// Inserts a new row into the data table
+        /// </summary>
+        /// <param name="element"></param>
 
         public void Save(Filmy element)
         {
@@ -106,7 +131,7 @@ namespace db_project
         }
 
         /// <summary>
-        /// Updates the current row of the data table to new values 
+        /// Updates the specified row of the data table with new values
         /// </summary>
         /// <param name="previousElement"></param>
         /// <param name="updatedElement"></param>
@@ -196,7 +221,11 @@ namespace db_project
             }
         }
 
-
+        /// <summary>
+        /// Returns the ID of the specified Zanry object in the database
+        /// </summary>
+        /// <param name="film"></param>
+        /// <returns> ID of the specified Zanry object in the database</returns>
         private int GetGenreID(Zanry zanr)
         {
 
@@ -224,6 +253,11 @@ namespace db_project
             return idValue;
         }
 
+        /// <summary>
+        /// Returns the ID of the specified Reziseri object in the database
+        /// </summary>
+        /// <param name="film"></param>
+        /// <returns> ID of the specified Reziseri object in the database</returns>
         private int GetDirectorID(Reziseri reziser)
         {
 

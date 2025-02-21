@@ -30,7 +30,7 @@ namespace db_project
             {
                 Console.WriteLine("Chyba při připojení k databázi");
             }
-            Console.WriteLine("konec programu");
+            Console.WriteLine("Konec programu");
         }
 
         /// <summary>
@@ -230,8 +230,13 @@ namespace db_project
                         string newMovieDirectorSurname = "";
                         newMovieDirectorSurname = Console.ReadLine().Trim();
 
+                        Console.Write("zadej datum narození režiséra filmu (formát dd.MM.YYYY): ");
+                        DateTime newMovieDirectorBirthYear = new DateTime();
+                        newMovieDirectorBirthYear = Convert.ToDateTime(Console.ReadLine().Trim());
+
+
                         Zanry genre = new Zanry(newMovieGenreName);
-                        Reziseri director = new Reziseri(newMovieDirectorName, newMovieDirectorSurname);
+                        Reziseri director = new Reziseri(newMovieDirectorName, newMovieDirectorSurname, newMovieDirectorBirthYear);
                         Filmy film = new Filmy(newMovieName, newMovieYear, newMovieTheaterShowing, director, genre);
 
                         filmyDAO.Save(film);
@@ -298,6 +303,8 @@ namespace db_project
                         Zanry newGenre = new Zanry(newGenreName, newGenreCode);
 
                         zanryDAO.Save(newGenre);
+                        Console.WriteLine("Žánr byl úspěšně přidán");
+
 
                         break;
                     case 4:
@@ -321,6 +328,8 @@ namespace db_project
                         Zanry updatedGenre = new Zanry(updateGenreName, updateGenreCode);
 
                         zanryDAO.Update(prevGenre, updatedGenre);
+                        Console.WriteLine("Žánr byl úspěšně upraven");
+
 
                         break;
 
@@ -374,7 +383,10 @@ namespace db_project
                         Reziseri newDirector = new Reziseri(newDirectorName, newDirectorSurname, newDirectorBirthYear);
 
                         reziseriDAO.Save(newDirector);
-                       
+
+                        Console.WriteLine("Režisér byl úspěšně přidán");
+
+
 
 
                         break;

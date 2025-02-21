@@ -8,8 +8,15 @@ using System.Xml.Linq;
 
 namespace db_project
 {
+    /// <summary>
+    /// Class implementing the DAO interface for the model class Reyiseri
+    /// </summary>
     internal class ReziseriDAO : DAOInterface<Reziseri>
     {
+        /// <summary>
+        /// Deletes the row based on the element parameter from the data table
+        /// </summary>
+        /// <param name="element"></param>
         public void Delete(Reziseri element)
         {
             string query = "delete from režiséři where jmeno = @jmeno and prijmeni = @prijmeni and dat_nar = @dat_nar";
@@ -24,6 +31,11 @@ namespace db_project
             }
         }
 
+        /// <summary>
+        /// Assigns all the values in the data table to Reziseri objects 
+        /// </summary>
+        /// <returns> An enumerator over the Reziseri objects</returns>
+
         public IEnumerable<Reziseri> GetAll()
         {
             string query = "select * from režiséři;";
@@ -35,15 +47,22 @@ namespace db_project
                 {
                     while (reader.Read())
                     {
-                        Reziseri reziser = new Reziseri(Convert.ToInt32(reader["id_rez"]), reader["jmeno"].ToString(), reader["prijmeni"].ToString(), Convert.ToDateTime(reader["dat_nar"]));
+                        Reziseri r = new Reziseri(Convert.ToInt32(reader["id_rez"]), reader["jmeno"].ToString(), reader["prijmeni"].ToString(), Convert.ToDateTime(reader["dat_nar"]));
 
-                        yield return reziser;
+                        yield return r;
 
                     }
                 }
                 
             }
         }
+
+        /// <summary>
+        /// Selects all the data from a row that matches the given name parameter and assigns it to a new Reziseri object
+        /// </summary>
+        /// <param name="names"></param>
+        /// <returns> A Reziseri object with the given name parameter</returns>
+        /// <exception cref="Exception"></exception>
 
         public Reziseri GetByValueName(params string[] names)
         {
@@ -74,6 +93,11 @@ namespace db_project
             return rez;
         }
 
+        /// <summary>
+        /// Inserts a new row into the data table
+        /// </summary>
+        /// <param name="element"></param>
+
         public void Save(Reziseri element)
         {
             try
@@ -97,7 +121,7 @@ namespace db_project
         }
 
         /// <summary>
-        /// Updates the current row of the data table to new values 
+        /// Updates the specified row of the data table with new values
         /// </summary>
         /// <param name="previousElement"></param>
         /// <param name="updatedElement"></param>

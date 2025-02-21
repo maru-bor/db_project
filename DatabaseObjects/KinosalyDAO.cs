@@ -8,8 +8,15 @@ using System.Xml.Linq;
 
 namespace db_project
 {
+    /// <summary>
+    /// Class implementing the DAO interface for the model class Kinosaly
+    /// </summary>
     internal class KinosalyDAO : DAOInterface<Kinosaly>
     {
+        /// <summary>
+        /// Deletes the row based on the element parameter from the data table
+        /// </summary>
+        /// <param name="element"></param>
         public void Delete(Kinosaly element)
         {
             string query = "delete from kinosály where nazev = @nazev and cis_sal = @cis_sal;";
@@ -23,6 +30,11 @@ namespace db_project
             }
         }
 
+        /// <summary>
+        /// Assigns all the values in the data table to Kinosaly objects 
+        /// </summary>
+        /// <returns> An enumerator over the Kinosaly objects</returns>
+
         public IEnumerable<Kinosaly> GetAll()
         {
             string query = "select * from kinosály;";
@@ -33,14 +45,21 @@ namespace db_project
                 {
                     while (reader.Read())
                     {
-                        Kinosaly kinosal = new Kinosaly(Convert.ToInt32(reader["id_kis"]), reader["nazev"].ToString(), Convert.ToInt32(reader["cis_sal"]));
-                        yield return kinosal;
+                        Kinosaly k = new Kinosaly(Convert.ToInt32(reader["id_kis"]), reader["nazev"].ToString(), Convert.ToInt32(reader["cis_sal"]));
+                        yield return k;
 
                     }
                 }
                 
             }
         }
+
+        /// <summary>
+        /// Selects all the data from a row that matches the given name parameter and assigns it to a new Kinosaly object
+        /// </summary>
+        /// <param name="names"></param>
+        /// <returns> A Kinosaly object with the given name parameter</returns>
+        /// <exception cref="Exception"></exception>
 
         public Kinosaly GetByValueName(params string[] names)
         {
@@ -71,6 +90,11 @@ namespace db_project
             return k;
         }
 
+        /// <summary>
+        /// Inserts a new row into the data table
+        /// </summary>
+        /// <param name="element"></param>
+
         public void Save(Kinosaly element)
         {
             string query = "insert into kinosály(nazev, cis_sal) values (@nazev, @cis_sal);";
@@ -86,7 +110,7 @@ namespace db_project
         }
 
         /// <summary>
-        /// Updates the current row of the data table to new values 
+        /// Updates the specified row of the data table with new values
         /// </summary>
         /// <param name="previousElement"></param>
         /// <param name="updatedElement"></param>
