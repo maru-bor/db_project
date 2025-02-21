@@ -9,3 +9,10 @@ Databázový projekt s konzolovým uživatelským rozhraním umožňující prá
     - **IntialCatalog**: hodnotu nastavit na jméno databáze
     - **DataSource**: hodnotu nastavit na jméno serveru
 - Nakonec spuštění programu -> zobrazení konzolového uživatelského rozhraní
+
+## Testovací scénáře
+Pro projekt byl také vytvořen PDF soubor s testovacími scénáři **test_case_dbproject**. Podle testovacích scénářů by se mělo otestovat:
+    - spustitelnost programu 
+    - zobrazení záznamů v tabulkách 
+    - přidání nových záznamů do tabulek
+    
