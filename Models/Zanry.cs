@@ -37,7 +37,7 @@ namespace db_project
             get => kod;
             set 
             {
-                if (value == null || value <= 0)
+                if (value.ToString().Length < 3 || value <= 0)
                 {
                     throw new Exception("nevalidni hodnota kodu");
                 }

@@ -96,6 +96,11 @@ namespace db_project
            
         }
 
+        /// <summary>
+        /// Updates the current row of the data table to new values 
+        /// </summary>
+        /// <param name="previousElement"></param>
+        /// <param name="updatedElement"></param>
         public void Update(Reziseri previousElement, Reziseri updatedElement)
         {
             string query = "update režiséři set jmeno = @jmeno, prijmeni = @prijmeni, dat_nar = @dat_nar " +

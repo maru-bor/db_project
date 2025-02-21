@@ -12,13 +12,13 @@ namespace db_project
     {
         public void Delete(Filmy element)
         {
-            string query = "delete from filmy where nazev = @nazev and dat_vznik = @dat_vznik and id_rez = @id_rez;";
+            string query = "delete from filmy where nazev = @nazev and dat_vznik = @dat_vznik;";
             SqlConnection conn = DatabaseSingleton.GetConnInstance();
             using (SqlCommand cmd = new SqlCommand(query, conn))
             {
                 cmd.Parameters.AddWithValue("@nazev", element.Nazev);
                 cmd.Parameters.AddWithValue("@dat_vznik", element.DatVzniku);
-                cmd.Parameters.AddWithValue("@id_rez", GetDirectorID(element.Reziser));
+               
 
                 cmd.ExecuteNonQuery();
             }
@@ -104,6 +104,12 @@ namespace db_project
                 cmd.ExecuteNonQuery();
             }
         }
+
+        /// <summary>
+        /// Updates the current row of the data table to new values 
+        /// </summary>
+        /// <param name="previousElement"></param>
+        /// <param name="updatedElement"></param>
 
         public void Update(Filmy previousElement, Filmy updatedElement)
         {

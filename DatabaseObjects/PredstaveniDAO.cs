@@ -109,6 +109,12 @@ namespace db_project
             }
         }
 
+        /// <summary>
+        /// Updates the current row of the data table to new values 
+        /// </summary>
+        /// <param name="previousElement"></param>
+        /// <param name="updatedElement"></param>
+
         public void Update(Predstaveni previousElement, Predstaveni updatedElement)
         {
             string query = "update představení set dat_plan_pred = @dat_plan_pred, dat_kon_pred = @dat_kon_pred, " +

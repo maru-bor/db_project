@@ -28,9 +28,9 @@ namespace db_project
             }
             catch (SqlException ex)
             {
-                Console.WriteLine("chyba při připojení k databázi");
+                Console.WriteLine("Chyba při připojení k databázi");
             }
-            Console.WriteLine("Konec programu");
+            Console.WriteLine("konec programu");
         }
 
         /// <summary>
@@ -44,10 +44,10 @@ namespace db_project
                 int userInput = 0;
                 while (userInput != 4)
                 {
-                    Console.WriteLine("zjistit informace o: ");
-                    Console.WriteLine("1. filmech"
-                             + "\n" + "2. žánrech"
-                             + "\n" + "3. režisérech"
+                    Console.WriteLine("--Hlavní menu--" + "\n" + "Vyber jednu z možností: ");
+                    Console.WriteLine("1. filmy"
+                             + "\n" + "2. žánry"
+                             + "\n" + "3. režiséři"
                              + "\n" + "4. exit");
                     userInput = Convert.ToInt32(Console.ReadLine().Trim());
                     switch (userInput)
@@ -66,7 +66,7 @@ namespace db_project
             }
             catch (Exception ex)
             {
-                Console.WriteLine("špatně zadaná hodnota!");
+                Console.WriteLine("(!!!) Špatná hodnota: zkontrolujte, zda-li tato hodnota v databázi existuje nebo je ve správném formátu");
                 MainMenu();
             }
             
@@ -74,7 +74,7 @@ namespace db_project
         }
 
         /// <summary>
-        /// Joins all the films into a string and returns the string
+        /// Joins all the films into a string
         /// </summary>
         /// <returns> A string containing all the films in the database </returns>
         public string GetAllFilms()
@@ -120,7 +120,7 @@ namespace db_project
         }
 
         /// <summary>
-        /// Joins all the genres into a string and returns the string
+        /// Joins all the genres into a string
         /// </summary>
         /// <returns>  A string containing all the genres in the database </returns>
 
@@ -141,7 +141,7 @@ namespace db_project
         }
 
         /// <summary>
-        /// Joins all the directors into a string and returns the string
+        /// Joins all the directors into a string
         /// </summary>
         /// <returns> A string containing all the directors in the database </returns>
         public string GetAllDirectors()
@@ -168,14 +168,16 @@ namespace db_project
         public void FilmMenu()
         {
             int userInput = 0;
-            while (userInput != 5)
+            while (userInput != 7)
             {
-                Console.WriteLine("--filmy--");
+                Console.WriteLine("--Filmy--");
                 Console.WriteLine("1. vypsat informace o všech filmech"
-                         + "\n" + "2. vypsat informace o jednom filmu"
+                         + "\n" + "2. vypsat informace o filmu"
                          + "\n" + "3. vypsat všechny filmy jednoho žánru"
                          + "\n" + "4. vypsat všechny filmy jednoho režiséra"
-                         + "\n" + "5. zpět na výběr");
+                         + "\n" + "5. přidat nový film"
+                         + "\n" + "6. smazat film"
+                         + "\n" + "7. zpět na výběr");
                 userInput = Convert.ToInt32(Console.ReadLine().Trim());
                 switch (userInput)
                 {
@@ -183,26 +185,75 @@ namespace db_project
                         Console.WriteLine(GetAllFilms());
                         break;
                     case 2:
-                        Console.WriteLine("zadej název filmu: ");
+                        Console.Write("zadej název filmu: ");
                         string name = "";
                         name = Console.ReadLine().Trim();
-                        Console.WriteLine(GetFilmByName(name));
+                        Console.Write(GetFilmByName(name));
                         break;
                     case 3:
-                        Console.WriteLine("zadej název žánru: ");
+                        Console.Write("zadej název žánru: ");
                         string genreName = "";
                         genreName = Console.ReadLine().Trim();
                         Console.WriteLine(WriteOutAllFilmsByGenre(genreName));
                         break;
                     case 4:
-                        Console.WriteLine("zadej jméno režiséra: ");
+                        Console.Write("zadej jméno režiséra: ");
                         string directorName = "";
                         directorName = Console.ReadLine().Trim();
-                        Console.WriteLine("zadej příjmení režiséra: ");
+                        Console.Write("zadej příjmení režiséra: ");
                         string directorSurname = "";
                         directorSurname = Console.ReadLine().Trim();
-                        Console.WriteLine(WriteOutAllFilmsByDirector(directorName, directorSurname));
+                        Console.Write(WriteOutAllFilmsByDirector(directorName, directorSurname));
                         break;
+                    case 5:
+                        Console.Write("zadej název nového filmu: ");
+                        string newMovieName = "";
+                        newMovieName = Console.ReadLine().Trim();
+
+                        Console.Write("zadej datum vzniku nového filmu (formát dd.MM.YYYY): ");
+                        DateTime newMovieYear = new DateTime() ;
+                        newMovieYear = Convert.ToDateTime(Console.ReadLine().Trim());
+
+                        Console.Write("je tento film stále promítán v kinech? (true/false pouze malá písmena): ");
+                        bool newMovieTheaterShowing;
+                        newMovieTheaterShowing = Convert.ToBoolean(Console.ReadLine().Trim());
+
+                        Console.Write("zadej název žánru nového filmu: ");
+                        string newMovieGenreName = "";
+                        newMovieGenreName = Console.ReadLine().Trim();
+
+                        Console.Write("zadej jméno režiséra filmu: ");
+                        string newMovieDirectorName = "";
+                        newMovieDirectorName = Console.ReadLine().Trim();
+
+                        Console.Write("zadej příjmení režiséra filmu: ");
+                        string newMovieDirectorSurname = "";
+                        newMovieDirectorSurname = Console.ReadLine().Trim();
+
+                        Zanry genre = new Zanry(newMovieGenreName);
+                        Reziseri director = new Reziseri(newMovieDirectorName, newMovieDirectorSurname);
+                        Filmy film = new Filmy(newMovieName, newMovieYear, newMovieTheaterShowing, director, genre);
+
+                        filmyDAO.Save(film);
+
+                        Console.WriteLine("Film byl úspěšně přidán");
+
+                        break;
+                    case 6:
+                        Console.Write("zadej název filmu: ");
+                        string deleteMovieName = "";
+                        deleteMovieName = Console.ReadLine().Trim();
+
+                        Console.Write("zadej datum vzniku filmu (formát dd.MM.YYYY): ");
+                        DateTime deleteMovieYear = new DateTime();
+                        deleteMovieYear = Convert.ToDateTime(Console.ReadLine().Trim());
+
+                        Filmy deleteFilm = new Filmy(deleteMovieName, deleteMovieYear);
+                        filmyDAO.Delete(deleteFilm);
+                        Console.WriteLine("Film byl úspěšně smazán");
+
+                        break;
+
                 }
 
             }
@@ -214,12 +265,14 @@ namespace db_project
         public void GenreMenu()
         {
             int userInput = 0;
-            while (userInput != 3)
+            while (userInput != 5)
             {
-                Console.WriteLine("--žánry--");
+                Console.WriteLine("--Žánry--");
                 Console.WriteLine("1. vypsat informace o všech žánrech"
-                         + "\n" + "2. vypsat informace o jednom žánru"
-                         + "\n" + "3. zpět na výběr");
+                         + "\n" + "2. vypsat informace o žánru"
+                         + "\n" + "3. přidat žánr"
+                         + "\n" + "4. upravit žánr"
+                         + "\n" + "5. zpět na výběr");
                 userInput = Convert.ToInt32(Console.ReadLine().Trim());
                 switch (userInput)
                 {
@@ -227,11 +280,50 @@ namespace db_project
                         Console.WriteLine(GetAllGenres());
                         break;
                     case 2:
-                        Console.WriteLine("zadej název žánru: ");
+                        Console.Write("zadej název žánru: ");
                         string name = "";
                         name = Console.ReadLine().Trim();
+
                         Console.WriteLine(GetGenreByName(name));
                         break;
+                    case 3:
+                        Console.Write("zadej název nového žánru: ");
+                        string newGenreName = "";
+                        newGenreName = Console.ReadLine().Trim();
+
+                        Console.Write("zadej trojciferný kód nového žánru: ");
+                        int newGenreCode = 0;
+                        newGenreCode = Convert.ToInt32(Console.ReadLine().Trim());
+
+                        Zanry newGenre = new Zanry(newGenreName, newGenreCode);
+
+                        zanryDAO.Save(newGenre);
+
+                        break;
+                    case 4:
+                        Console.Write("zadej název žánru, který chceš upravit: ");
+                        string prevGenreName = "";
+                        prevGenreName = Console.ReadLine().Trim();
+
+                        Console.Write("zadej trojciferný kód žánru, který chceš upravit: ");
+                        int prevGenreCode = 0;
+                        prevGenreCode = Convert.ToInt32(Console.ReadLine().Trim());
+
+                        Console.Write("zadej nový název žánru: ");
+                        string updateGenreName = "";
+                        updateGenreName = Console.ReadLine().Trim();
+
+                        Console.Write("zadej nový trojciferný kód žánru: ");
+                        int updateGenreCode = 0;
+                        updateGenreCode = Convert.ToInt32(Console.ReadLine().Trim());
+
+                        Zanry prevGenre = new Zanry(prevGenreName, prevGenreCode);
+                        Zanry updatedGenre = new Zanry(updateGenreName, updateGenreCode);
+
+                        zanryDAO.Update(prevGenre, updatedGenre);
+
+                        break;
+
                 }
 
             }
@@ -243,12 +335,13 @@ namespace db_project
         public void DirectorMenu()
         {
             int userInput = 0;
-            while (userInput != 3)
+            while (userInput != 4)
             {
-                Console.WriteLine("--režiséři--");
+                Console.WriteLine("--Režiséři--");
                 Console.WriteLine("1. vypsat informace o všech režisérech"
-                         + "\n" + "2. vypsat informace o jednom režisérovi"
-                         + "\n" + "3. zpět na výběr");
+                         + "\n" + "2. vypsat informace o režisérovi"
+                         + "\n" + "3. přidat režiséra"
+                         + "\n" + "4. zpět na výběr");
                 userInput = Convert.ToInt32(Console.ReadLine().Trim());
                 switch (userInput)
                 {
@@ -256,13 +349,34 @@ namespace db_project
                         Console.WriteLine(GetAllDirectors());
                         break;
                     case 2:
-                        Console.WriteLine("zadej jméno režiséra: ");
+                        Console.Write("zadej jméno režiséra: ");
                         string directorName = "";
                         directorName = Console.ReadLine().Trim();
-                        Console.WriteLine("zadej příjmení režiséra: ");
+                        Console.Write("zadej příjmení režiséra: ");
                         string directorSurname = "";
                         directorSurname = Console.ReadLine().Trim();
                         Console.WriteLine(GetDirectorByName(directorName, directorSurname));
+                        break;
+                    case 3:
+                        Console.Write("zadej jméno nového režiséra: ");
+                        string newDirectorName = "";
+                        directorName = Console.ReadLine().Trim();
+
+                        Console.Write("zadej příjmení nového režiséra: ");
+                        string newDirectorSurname = "";
+                        directorSurname = Console.ReadLine().Trim();
+
+                        Console.Write("zadej datum narození nového režiséra (formát dd.MM.YYYY): "); 
+                        DateTime newDirectorBirthYear = new DateTime();
+                        newDirectorBirthYear = Convert.ToDateTime(Console.ReadLine().Trim());
+
+
+                        Reziseri newDirector = new Reziseri(newDirectorName, newDirectorSurname, newDirectorBirthYear);
+
+                        reziseriDAO.Save(newDirector);
+                       
+
+
                         break;
                 }
 

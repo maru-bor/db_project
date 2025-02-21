@@ -51,7 +51,7 @@ namespace db_project
           }
 
           /// <summary>
-          /// Reads key value pairs from the configuration file and returns the values as a string
+          /// Reads key value pairs from the configuration file and returns the values as a string value
           /// </summary>
           /// <param name="key"></param>
           /// <returns> A value from the key value pair in a configuration file</returns>
