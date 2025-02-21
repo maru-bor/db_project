@@ -12,7 +12,7 @@ Databázový projekt s konzolovým uživatelským rozhraním umožňující prá
 
 ## Testovací scénáře
 Pro projekt byl také vytvořen PDF soubor s testovacími scénáři **test_case_dbproject**. Podle testovacích scénářů by se mělo otestovat:
-    - spustitelnost programu 
-    - zobrazení záznamů v tabulkách 
-    - přidání nových záznamů do tabulek
+    - fdsf
+    - fdsf
+    
     
