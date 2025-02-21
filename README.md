@@ -1,5 +1,5 @@
 # Databázový projekt
-Databázový projekt s konzolovým uživatelským rozhraním umožňující práci s databází. Tento projekt byl programovám pouze v C# a také využívá návrhové vzory Singleton a DAO.
+Databázový projekt s konzolovým uživatelským rozhraním umožňující práci s databází. Tento projekt byl programován pouze v C# a také využívá návrhové vzory Singleton a DAO.
 
 ## Jak program připojit k databázi
 - Importovat soubor **db_export.sql** do vlastního databázového serveru (pro strukturování samotné databáze)
